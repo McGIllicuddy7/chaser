@@ -15,7 +15,7 @@
  }
  void Box::on_render(){
   Vector2 loc = m_runtime->convert_world_to_screen({m_collision.x, m_collision.y});
-  if( m_hit<0){
+  if( m_hit<0.1){
     DrawRectangleV(m_runtime->convert_world_to_screen({m_collision.x, m_collision.y}), Vector2{32, 32,}, BLUE);
   }
   else{

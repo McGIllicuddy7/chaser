@@ -45,7 +45,9 @@ void Runtime::Render(){
             (e)->on_render();
         }
     }
-    DrawFPS(600,40);
+    char t[100] = {};
+    snprintf(t, 100, "x_dist:%f y_dist:%f", m_col_tree.xdiv, m_col_tree.ydiv); 
+    DrawFPS(600,80);
     EndDrawing();
 }
 void Runtime::Run(){
@@ -84,23 +86,50 @@ bool Runtime::origin_set(){
 
 void Runtime::frame_collision_set_up(){
     m_collisions.clear();
+    float minx = 100000000000;
+    float miny = 100000000000;
+    float maxx = -100000000000;
+    float maxy = -100000000000;
     for(int i =0; i<m_entities.cache_size(); i++){
         Entity * e = m_entities.get_unchecked(i);
         if (e){
-            m_collisions.push_back(e->get_bb());
+            EntityBB g = e->get_bb();
+            if(g.box.x<minx){
+                minx = g.box.x;
+            }
+            if (g.box.x+g.box.width>maxx){
+                maxx = g.box.x+g.box.width;
+            }
+            if(g.box.y<miny){
+                miny = g.box.y;
+            }
+            if (g.box.y+g.box.height>maxy){
+                maxy= g.box.y+g.box.height;
+            }
+            m_collisions.push_back(g);
         }
     }
+    m_col_tree.initialize(m_collisions, {minx, miny}, {maxx, maxy});
 }
-Collision Runtime::line_trace(Vector2 start, Vector2 end,ResourceRef to_ignore){
+Collision Runtime::box_trace(Vector2 start, Vector2 end, Rectangle rec,ResourceRef to_ignore){
+    return Collision{false};
+}
+int Runtime::screen_height(){
+    return m_screen_height;
+}
+int Runtime::screen_width(){
+    return m_screen_width;
+}
+static Collision single_line_trace(Vector2 start, Vector2 end, ResourceRef to_ignore, std::vector<EntityBB> &collisions){
     float min_dist = Vector2LengthSqr(end-start);
     float dist = min_dist;
     Collision out = {false};
-    for(int i = 0; i<m_collisions.size(); i++){
-        ResourceRef rf = m_collisions[i].Parent;
+    for(int i = 0; i<collisions.size(); i++){
+        ResourceRef rf = collisions[i].Parent;
         if(rf == to_ignore){
             continue;
         }
-        Rectangle bx = m_collisions[i].box;
+        Rectangle bx = collisions[i].box;
         Vector2 c1 = {bx.x, bx.y};
         Vector2 c2 = {bx.x+bx.width, bx.y};
         Vector2 c3 = {bx.x, bx.y+bx.height};
@@ -140,12 +169,93 @@ Collision Runtime::line_trace(Vector2 start, Vector2 end,ResourceRef to_ignore){
     }
     return out;
 }
-Collision Runtime::box_trace(Vector2 start, Vector2 end, Rectangle rec,ResourceRef to_ignore){
-    return Collision{false};
+Collision Runtime::line_trace(Vector2 start, Vector2 end,ResourceRef to_ignore){
+    return m_col_tree.line_trace(start, end, m_collisions, to_ignore);
 }
-int Runtime::screen_height(){
-    return m_screen_height;
+void ColTree::initialize(std::vector<EntityBB> &collisions,Vector2 min, Vector2 max){
+    for(int i = 0; i<stride*stride; i++){
+        m_area[i].clear();
+        m_area[i].reserve(32);
+    }
+    m_min = min;
+    m_max = max;
+    xdiv =(m_max.x-m_min.x)/stride;
+    ydiv =(m_max.y-m_min.y)/stride;
+    for(int i = 0; i<collisions.size(); i++){
+        EntityBB a = collisions[i];
+        {
+            int x = (a.box.x-m_min.x)/xdiv;
+            int y =(a.box.y-m_min.y)/ydiv;
+            if (x<0) x = 0;
+            if (y<0) y = 0;
+            if (x>stride-1) x= stride-1;
+            if (y>stride -1) y= stride-1;
+            m_area[x+y*stride].push_back(a);
+        }
+        {
+            int x = (a.box.x+a.box.width-m_min.x)/xdiv;
+            int y =(a.box.y-m_min.y)/ydiv;
+            if (x<0) x = 0;
+            if (y<0) y = 0;
+            if (x>stride-1) x= stride-1;
+            if (y>stride -1) y= stride-1;
+            m_area[x+y*stride].push_back(a);
+        }
+        {
+            int x = (a.box.x-m_min.x)/xdiv;
+            int y =(a.box.y+a.box.height-m_min.y)/ydiv;
+            if (x<0) x = 0;
+            if (y<0) y = 0;
+            if (x>stride-1) x= stride-1;
+            if (y>stride -1) y= stride-1;
+            m_area[x+y*stride].push_back(a);
+        }{
+            int x = (a.box.x+a.box.width-m_min.x)/xdiv;
+            int y =(a.box.y+a.box.height-m_min.y)/ydiv;
+            if (x<0) x = 0;
+            if (y<0) y = 0;
+            if (x>stride-1) x= stride-1;
+            if (y>stride -1) y= stride-1;
+            m_area[x+y*stride].push_back(a);
+        }
+    }
 }
-int Runtime::screen_width(){
-    return m_screen_width;
+Collision ColTree::line_trace(Vector2 start, Vector2 end, std::vector<EntityBB> &boxes,ResourceRef to_ignore){
+    float min_dist = Vector2DistanceSqr(start, end);
+    float d = min_dist*4;
+    Collision out = {false};
+    for(int y = 0; y<stride; y++){
+        for(int x = 0; x<stride; x++){
+            Rectangle bx = {x*xdiv+m_min.x, y*ydiv+m_min.y,xdiv, ydiv};
+            Vector2 c1 = {bx.x, bx.y};
+            Vector2 c2 = {bx.x+bx.width, bx.y};
+            Vector2 c3 = {bx.x,bx.y+bx.height};
+            Vector2 c4 = {bx.x+bx.width, bx.y+bx.height};
+            if (Vector2DistanceSqr(start, c1)>d && Vector2DistanceSqr(start, c2)>d
+            && Vector2DistanceSqr(start, c3)>d && Vector2DistanceSqr(start, c4)>d){
+                continue;
+            }
+            Vector2 col;
+            bool inside = false;
+            if(CheckCollisionPointRec(start, bx)){
+                inside = true;
+            }
+            if(CheckCollisionPointRec(end, bx)){
+                inside = true;
+            }
+            if(CheckCollisionLines(start, end, c1, c2, &col)|| CheckCollisionLines(start, end, c1, c3, &col)||
+            CheckCollisionLines(start, end, c2, c4, &col)||CheckCollisionLines(start, end, c3, c4, &col) || inside){
+                Collision tmp = single_line_trace(start, end,to_ignore, boxes);
+                float d0 = Vector2Distance(tmp.location, start);
+                if( d0<min_dist){
+                    min_dist = d0;
+                    out = tmp;
+                }
+            }
+        }
+    }
+    return out;
+}
+Collision ColTree::box_trace(Vector2 start, Vector2 end, Rectangle rec, std::vector<EntityBB> &boxes,ResourceRef to_ignore){
+    return {false};
 }

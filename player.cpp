@@ -16,7 +16,6 @@
         input.x +=1;
      }
    set_location(get_location()+input*200*dt);
-
    Collision c = m_runtime->line_trace(get_location(), get_location()+Vector2{100, 0}, m_this_ref);
    if(c.hit){
       Entity *e = m_runtime->get_entity(c.collided_with);
