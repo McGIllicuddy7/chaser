@@ -14,11 +14,12 @@ template <typename T >struct Resource{
     T * m_value;
     size_t m_generation;
     void reset(){
-        if(m_value){
+        if(m_value!= nullptr){
             auto v = m_value;
             cleanup(v);
             delete v;
             m_generation ++;
+            m_value = nullptr;
         }
     }
     Resource(){
@@ -65,6 +66,16 @@ template <typename T> struct ResourceCache{
         }
         cache[idx].emplace(value);
         return ResourceRef{(size_t)idx, cache[idx].generation()};
+    }
+    bool remove(ResourceRef ref){
+        if(ref.idx>=cache.size()){
+            return false;
+        }
+        if (ref.generation != cache[ref.idx].generation()){
+            return false;
+        }
+        cache[ref.idx].remove(ref.generation);
+        return true;
     }
     T* get(ResourceRef ref){
         if(ref.idx>=cache.size()){

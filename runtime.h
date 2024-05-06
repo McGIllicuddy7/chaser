@@ -9,10 +9,10 @@ class Entity;
 struct EntityBB;
 struct Collision;
 struct ColTree{
-    const int stride =64;
+    static const int stride =32;
     float xdiv;
     float ydiv;
-    std::vector<EntityBB>m_area[64*64];
+    std::vector<EntityBB>m_area[stride*stride];
     Vector2 m_min;
     Vector2 m_max;
     void initialize(std::vector<EntityBB> &collisions,Vector2 min, Vector2 max);
@@ -45,6 +45,7 @@ class Runtime {
     void unset_entity_as_origin();
     bool origin_set();
     Entity * get_entity(ResourceRef ref);
+    void destroy_entity(ResourceRef ref);
     Collision line_trace(Vector2 start, Vector2 end,ResourceRef to_ignore = ResourceRef());
     Collision box_trace(Vector2 start, Vector2 end, Rectangle rec,ResourceRef to_ignore = ResourceRef());
     int screen_height();

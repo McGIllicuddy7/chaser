@@ -112,7 +112,7 @@ void Runtime::frame_collision_set_up(){
     m_col_tree.initialize(m_collisions, {minx, miny}, {maxx, maxy});
 }
 Collision Runtime::box_trace(Vector2 start, Vector2 end, Rectangle rec,ResourceRef to_ignore){
-    return Collision{false};
+    return m_col_tree.box_trace(start, end, rec, m_collisions, to_ignore);
 }
 int Runtime::screen_height(){
     return m_screen_height;
@@ -222,7 +222,7 @@ void ColTree::initialize(std::vector<EntityBB> &collisions,Vector2 min, Vector2 
 }
 Collision ColTree::line_trace(Vector2 start, Vector2 end, std::vector<EntityBB> &boxes,ResourceRef to_ignore){
     float min_dist = Vector2DistanceSqr(start, end);
-    float d = min_dist*4;
+    float d = min_dist;
     Collision out = {false};
     for(int y = 0; y<stride; y++){
         for(int x = 0; x<stride; x++){
@@ -231,11 +231,6 @@ Collision ColTree::line_trace(Vector2 start, Vector2 end, std::vector<EntityBB> 
             Vector2 c2 = {bx.x+bx.width, bx.y};
             Vector2 c3 = {bx.x,bx.y+bx.height};
             Vector2 c4 = {bx.x+bx.width, bx.y+bx.height};
-            if (Vector2DistanceSqr(start, c1)>d && Vector2DistanceSqr(start, c2)>d
-            && Vector2DistanceSqr(start, c3)>d && Vector2DistanceSqr(start, c4)>d){
-                continue;
-            }
-            Vector2 col;
             bool inside = false;
             if(CheckCollisionPointRec(start, bx)){
                 inside = true;
@@ -243,6 +238,11 @@ Collision ColTree::line_trace(Vector2 start, Vector2 end, std::vector<EntityBB> 
             if(CheckCollisionPointRec(end, bx)){
                 inside = true;
             }
+            if ((Vector2DistanceSqr(start, c1)>d && Vector2DistanceSqr(start, c2)>d
+            && Vector2DistanceSqr(start, c3)>d && Vector2DistanceSqr(start, c4)>d)&& !inside){
+                continue;
+            }
+            Vector2 col;
             if(CheckCollisionLines(start, end, c1, c2, &col)|| CheckCollisionLines(start, end, c1, c3, &col)||
             CheckCollisionLines(start, end, c2, c4, &col)||CheckCollisionLines(start, end, c3, c4, &col) || inside){
                 Collision tmp = single_line_trace(start, end,to_ignore, boxes);
@@ -257,5 +257,51 @@ Collision ColTree::line_trace(Vector2 start, Vector2 end, std::vector<EntityBB> 
     return out;
 }
 Collision ColTree::box_trace(Vector2 start, Vector2 end, Rectangle rec, std::vector<EntityBB> &boxes,ResourceRef to_ignore){
-    return {false};
+    start = {rec.x, rec.y};
+    float min_dist = Vector2DistanceSqr(start, end);
+    Collision out = {false};
+    Collision c1 = line_trace(start, end, boxes, to_ignore);
+    if(c1.hit){
+        float d = Vector2DistanceSqr(start, c1.location);
+        if( d<min_dist){
+            min_dist = d;
+            out = c1;
+        }
+    }
+    Collision c2 = line_trace(start+Vector2{rec.width,0}, end+Vector2{rec.width,0}, boxes, to_ignore);
+    if(c2.hit){
+        float d = Vector2DistanceSqr(start+Vector2{rec.width,0}, c2.location);
+        if( d<min_dist){
+            min_dist = d;
+            out = c2;
+        }
+    }
+    Collision c3 = line_trace(start+Vector2{0, rec.height}, end+Vector2{0, rec.height}, boxes, to_ignore);
+    if(c3.hit){
+        float d = Vector2DistanceSqr(start+Vector2{0,rec.height}, c3.location);
+        if( d<min_dist){
+            min_dist = d;
+            out = c3;
+        }
+    }
+    Collision c4 = line_trace(start+Vector2{rec.width, rec.height}, end+Vector2{rec.width, rec.height}, boxes, to_ignore);
+    if(c4.hit){
+        float d = Vector2DistanceSqr(start+Vector2{rec.width,rec.height}, c4.location);
+        if( d<min_dist){
+            min_dist = d;
+            out = c4;
+        }
+    }
+    Collision c5 = line_trace(start+Vector2{rec.width/2, rec.height/2}, end+Vector2{rec.width/2, rec.height/2}, boxes, to_ignore);
+    if(c5.hit){
+        float d = Vector2DistanceSqr(start+Vector2{rec.width/2,rec.height/2}, c5.location);
+        if( d<min_dist){
+            min_dist = d;
+            out = c5;
+        }
+    }
+    return out;
+}
+void Runtime::destroy_entity(ResourceRef ref){
+    m_entities.remove(ref);
 }

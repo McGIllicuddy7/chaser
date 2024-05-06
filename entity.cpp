@@ -2,7 +2,6 @@
 #include "ops.h"
 void cleanup(Entity * entity){
     (entity)->on_destroy();
-    delete entity;
 }
  void Entity::on_tick(){
  }
