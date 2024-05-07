@@ -32,10 +32,12 @@
    m_runtime = runtime;
    m_this_ref = this_ref;
    set_location({0,0});
+   m_collision.height = 32;
+   m_collision.width = 32;
    runtime->set_entity_as_origin(this_ref, get_location());
  }
  void Player::on_render(){
-    DrawRectangleV(m_runtime->convert_world_to_screen(Vector2{m_collision.x, m_collision.y}-Vector2{16,16}), Vector2{32, 32,}, RAYWHITE);
+    DrawRectangleV(m_runtime->convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), Vector2{32, 32,}, RAYWHITE);
  }
 
 void Player::on_destroy(){

@@ -297,10 +297,6 @@ static bool check_rec_collision(Rectangle a, Rectangle b){
 }
 Collision ColTree::box_trace(Vector2 start, Vector2 end, Rectangle rec, std::vector<EntityBB> &boxes,ResourceRef to_ignore){
     Rectangle current = rec;
-    //current.x = start.x-rec.width/2;
-    //current.y = start.y-rec.height/2;
-    current.height*=2;
-    current.width*=2;
     float dist = 0;
     float max_dist = Vector2Distance(start, end);
     if (max_dist<3){
