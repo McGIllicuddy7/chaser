@@ -37,8 +37,8 @@ void Runtime::Tick(){
     }
 }
 void Runtime::Render(){
-    BeginDrawing();
-    ClearBackground(BLACK);
+//    BeginDrawing();
+//    ClearBackground(BLACK);
     for(int i =0; i<m_entities.cache_size(); i++){
         Entity * e = m_entities.get_unchecked(i);
         if (e){
@@ -48,18 +48,22 @@ void Runtime::Render(){
     char t[100] = {};
     snprintf(t, 100, "x_dist:%f y_dist:%f", m_col_tree.xdiv, m_col_tree.ydiv); 
     DrawFPS(600,80);
-    EndDrawing();
+  //  EndDrawing();
 }
 void Runtime::Run(){
     SetTraceLogLevel(LOG_ERROR);
     InitWindow(m_screen_width, m_screen_height, m_name.c_str());
+    SetTargetFPS(60);
     while(!WindowShouldClose()){
+        BeginDrawing();
+        ClearBackground(BLACK);
         frame_collision_set_up();
         Tick();
         if(m_use_entity_as_origin){
             set_relative_locations();
         }
         Render();
+        EndDrawing();
     }
 }
 Vector2 Runtime::convert_world_to_screen(Vector2 v) const{
@@ -264,22 +268,81 @@ static bool v_contains(std::vector<Vector2> &v, Vector2 loc){
     }
     return false;
 }
+static bool point_in_rect(Vector2 v, Rectangle a){
+    return (v.x>=a.x && v.x<a.width+a.x) && ( v.y>=a.y && v.y<a.height+a.y);
+}
+static bool check_rec_collision(Rectangle a, Rectangle b){
+    Vector2 ac1 = {a.x, a.y};
+    Vector2 ac2 = {a.x+a.width, a.y};
+    Vector2 ac3 = {a.x, a.y+a.height};
+    Vector2 ac4 = {a.x+a.width, a.y+a.height};
+    Vector2 a_s[] = {ac1, ac2, ac3, ac4};
+
+    Vector2 bc1 = {b.x, b.y};
+    Vector2 bc2 = {b.x+b.width, b.y};
+    Vector2 bc3 = {b.x, b.y+b.height};
+    Vector2 bc4 = {b.x+b.width, b.y+b.height};
+    Vector2 b_s[] = {bc1, bc2, bc3, bc4};
+    for(int i =0 ; i<4; i++){
+        if(point_in_rect(a_s[i], b)){
+            return true;
+        }
+    }
+    for(int i =0 ; i<4; i++){
+        if(point_in_rect(b_s[i], a)){
+            return true;
+        }
+    }
+    return false;
+}
 Collision ColTree::box_trace(Vector2 start, Vector2 end, Rectangle rec, std::vector<EntityBB> &boxes,ResourceRef to_ignore){
     Rectangle current = rec;
+    //current.x = start.x-rec.width/2;
+    //current.y = start.y-rec.height/2;
+    current.height*=2;
+    current.width*=2;
     float dist = 0;
     float max_dist = Vector2Distance(start, end);
+    if (max_dist<3){
+        max_dist = 3;
+    }
     Vector2 Direction = Vector2Normalize(end-start);
-    float delta = .1;
+    float delta = 1;
     std::vector<Vector2> hits = {};
     float dx = m_max.x-m_min.x;
     float dy = m_max.y-m_min.y;
     float mx = m_min.x;
     float my = m_min.y;
-    while(dist<max_dist){
-        float lx = (current.x-mx)/dx;
-        float ly = (current.y-my)/dy;
-        float gx = (current.x-mx+current.width)/dx;
-        float gy = (current.y-my+current.height)/dy;
+    {
+        float lx = ((current.x-mx)/dx)*stride;
+        float ly = ((current.y-my)/dy)*stride;
+        float gx = (((current.x-mx+current.width)/dx)*stride);
+        float gy = (((current.y-my+current.height)/dy)*stride);
+        Vector2 loc1 = {lx,ly};
+        Vector2 loc2 = {gx,ly};        
+        Vector2 loc3 = {lx,gy};
+        Vector2 loc4 = {gx,gy};
+        Vector2 locs[] = {loc1,loc2, loc3, loc4};
+        for(int i =0; i<4; i++){
+            if( locs[i].x<0 || locs[i].x>stride || locs[i].y<0 || locs[i].y>stride){
+                continue;
+            }
+            std::vector<EntityBB> & ref = m_area[(int)(locs[i].x)+(int)(locs[i].y)*stride];
+            for(int i =0; i<ref.size(); i++){
+                if(ref[i].Parent == to_ignore){
+                    continue;
+                }
+                if(CheckCollisionRecs(ref[i].box, current)){
+                    return {true, {current.x,current.y},{1,0},ref[i].Parent};
+                }
+            }
+        }
+    }
+    while(dist<=max_dist){
+        float lx = ((current.x-mx)/dx)*stride;
+        float ly = ((current.y-my)/dy)*stride;
+        float gx = (((current.x-mx+current.width)/dx)*stride);
+        float gy = (((current.y-my+current.height)/dy)*stride);
         Vector2 loc1 = {lx,ly};
         Vector2 loc2 = {gx,ly};        
         Vector2 loc3 = {lx,gy};
@@ -298,7 +361,6 @@ Collision ColTree::box_trace(Vector2 start, Vector2 end, Rectangle rec, std::vec
                     continue;
                 }
                 if(CheckCollisionRecs(ref[i].box, current)){
-                    printf("hit\n");
                     return {true, {current.x,current.y},{1,0},ref[i].Parent};
                 }
             }
