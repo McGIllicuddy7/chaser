@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <raymath.h>
+
 Runtime::~Runtime(){
     CloseWindow();
 }

@@ -4,7 +4,8 @@
 #include <raylib.h>
 #include "resource.h"
 #include "entity.h"
-
+#include <map>
+#include <string>
 class Entity;
 struct EntityBB;
 struct Collision;
@@ -29,6 +30,8 @@ class Runtime {
     Vector2 m_camera_location;
     std::vector<EntityBB> m_collisions;
     ColTree m_col_tree;
+    std::map<std::string, ResourceRef> m_texture_table;
+    ResourceCache<Texture> m_textures;
     protected:
     void Tick();
     void set_relative_locations();
@@ -50,4 +53,7 @@ class Runtime {
     Collision box_trace(Vector2 start, Vector2 end, Rectangle rec,ResourceRef to_ignore = ResourceRef());
     int screen_height();
     int screen_width();
+    ResourceRef load_texture_by_name(std::string texture);
+    Texture* get_texture(ResourceRef ref);
+    void unload_texture(std::string texture);
 };

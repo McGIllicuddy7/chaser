@@ -5,7 +5,7 @@
 #include "runtime.h"
 #include "ops.h"
 class Runtime;
-
+void cleanup(Texture * texture);
 struct Collision{
     bool hit; 
     Vector2 location;
