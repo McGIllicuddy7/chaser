@@ -256,51 +256,58 @@ Collision ColTree::line_trace(Vector2 start, Vector2 end, std::vector<EntityBB> 
     }
     return out;
 }
+static bool v_contains(std::vector<Vector2> &v, Vector2 loc){
+    for(int i = v.size()-1; i>-1; i--){
+        if(v[i].x == loc.x && v[i].y == loc.y){
+            return true;
+        }
+    }
+    return false;
+}
 Collision ColTree::box_trace(Vector2 start, Vector2 end, Rectangle rec, std::vector<EntityBB> &boxes,ResourceRef to_ignore){
-    start = {rec.x, rec.y};
-    float min_dist = Vector2DistanceSqr(start, end);
-    Collision out = {false};
-    Collision c1 = line_trace(start, end, boxes, to_ignore);
-    if(c1.hit){
-        float d = Vector2DistanceSqr(start, c1.location);
-        if( d<min_dist){
-            min_dist = d;
-            out = c1;
+    Rectangle current = rec;
+    float dist = 0;
+    float max_dist = Vector2Distance(start, end);
+    Vector2 Direction = Vector2Normalize(end-start);
+    float delta = .1;
+    std::vector<Vector2> hits = {};
+    float dx = m_max.x-m_min.x;
+    float dy = m_max.y-m_min.y;
+    float mx = m_min.x;
+    float my = m_min.y;
+    while(dist<max_dist){
+        float lx = (current.x-mx)/dx;
+        float ly = (current.y-my)/dy;
+        float gx = (current.x-mx+current.width)/dx;
+        float gy = (current.y-my+current.height)/dy;
+        Vector2 loc1 = {lx,ly};
+        Vector2 loc2 = {gx,ly};        
+        Vector2 loc3 = {lx,gy};
+        Vector2 loc4 = {gx,gy};
+        Vector2 locs[] = {loc1,loc2, loc3, loc4};
+        for(int i =0; i<4; i++){
+            if( locs[i].x<0 || locs[i].x>stride || locs[i].y<0 || locs[i].y>stride){
+                continue;
+            }
+            if(v_contains(hits, locs[i])){
+                continue;
+            }
+            std::vector<EntityBB> & ref = m_area[(int)(locs[i].x)+(int)(locs[i].y)*stride];
+            for(int i =0; i<ref.size(); i++){
+                if(ref[i].Parent == to_ignore){
+                    continue;
+                }
+                if(CheckCollisionRecs(ref[i].box, current)){
+                    printf("hit\n");
+                    return {true, {current.x,current.y},{1,0},ref[i].Parent};
+                }
+            }
         }
+        current.x += Direction.x*delta;
+        current.y += Direction.y*delta;
+        dist += delta;
     }
-    Collision c2 = line_trace(start+Vector2{rec.width,0}, end+Vector2{rec.width,0}, boxes, to_ignore);
-    if(c2.hit){
-        float d = Vector2DistanceSqr(start+Vector2{rec.width,0}, c2.location);
-        if( d<min_dist){
-            min_dist = d;
-            out = c2;
-        }
-    }
-    Collision c3 = line_trace(start+Vector2{0, rec.height}, end+Vector2{0, rec.height}, boxes, to_ignore);
-    if(c3.hit){
-        float d = Vector2DistanceSqr(start+Vector2{0,rec.height}, c3.location);
-        if( d<min_dist){
-            min_dist = d;
-            out = c3;
-        }
-    }
-    Collision c4 = line_trace(start+Vector2{rec.width, rec.height}, end+Vector2{rec.width, rec.height}, boxes, to_ignore);
-    if(c4.hit){
-        float d = Vector2DistanceSqr(start+Vector2{rec.width,rec.height}, c4.location);
-        if( d<min_dist){
-            min_dist = d;
-            out = c4;
-        }
-    }
-    Collision c5 = line_trace(start+Vector2{rec.width/2, rec.height/2}, end+Vector2{rec.width/2, rec.height/2}, boxes, to_ignore);
-    if(c5.hit){
-        float d = Vector2DistanceSqr(start+Vector2{rec.width/2,rec.height/2}, c5.location);
-        if( d<min_dist){
-            min_dist = d;
-            out = c5;
-        }
-    }
-    return out;
+    return {false};
 }
 void Runtime::destroy_entity(ResourceRef ref){
     m_entities.remove(ref);
