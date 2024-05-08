@@ -20,7 +20,9 @@ struct ColTree{
     Collision line_trace(Vector2 start, Vector2 end,std::vector<EntityBB> &boxes,ResourceRef to_ignore = ResourceRef());
     Collision box_trace(Vector2 start, Vector2 end, Rectangle rec,std::vector<EntityBB> &boxes,ResourceRef to_ignore = ResourceRef());
 };
+
 class Runtime {
+    static const int num_layers = 4;
     size_t m_screen_height;
     size_t m_screen_width;
     std::string m_name;
@@ -32,6 +34,7 @@ class Runtime {
     ColTree m_col_tree;
     std::map<std::string, ResourceRef> m_texture_table;
     ResourceCache<Texture> m_textures;
+    std::vector<ResourceRef> m_to_draw[num_layers];
     protected:
     void Tick();
     void set_relative_locations();

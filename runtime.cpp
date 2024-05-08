@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <raymath.h>
-
+extern void init_script(Runtime * runtime);
 Runtime::~Runtime(){
     CloseWindow();
 }
@@ -40,10 +40,15 @@ void Runtime::Tick(){
 void Runtime::Render(){
     BeginDrawing();
     ClearBackground(BLACK);
-    for(int i =0; i<m_entities.cache_size(); i++){
-        Entity * e = m_entities.get_unchecked(i);
-        if (e){
-            (e)->on_render();
+    for(int j = 0; j<num_layers; j++){
+        for(int i =0; i<m_to_draw[j].size(); i++){
+            Entity * e = get_entity(m_to_draw[j][i]);
+            if(e){
+                e->on_render();
+            } else{
+                m_to_draw[j].erase(m_to_draw[j].begin()+i, m_to_draw[j].begin()+i);
+                i--;
+            }
         }
     }
     DrawFPS(600,80);
@@ -53,6 +58,7 @@ void Runtime::Run(){
     SetTraceLogLevel(LOG_ERROR);
     InitWindow(m_screen_width, m_screen_height, m_name.c_str());
     SetTargetFPS(60);
+    init_script(this);
     while(!WindowShouldClose()){
         frame_collision_set_up();
         Tick();
@@ -68,6 +74,12 @@ Vector2 Runtime::convert_world_to_screen(Vector2 v) const{
 ResourceRef Runtime::register_entity(Entity *e){
     auto handle = m_entities.emplace(e);
     e->on_init(this, handle);
+    int depth = e->get_render_depth();
+    if(depth<0 || depth >=num_layers){
+        goto done;
+    }
+    m_to_draw[depth].push_back(handle);
+    done:
     return handle;
 }
 Entity * Runtime::get_entity(ResourceRef ref){

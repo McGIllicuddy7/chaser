@@ -2,14 +2,16 @@
 #include "runtime.h"
 #include "player.h"
 #include "box.h"
-int main(void){
-    printf("%zu\n", sizeof(Entity));
-    Runtime * runtime = Runtime::New();
-    Player *bert = new Player;
+void init_script(Runtime *runtime){
+    Player *bert = new Player;    
+    runtime->register_entity(bert);
     for(int i =0; i<1000; i++){
         Box * b = new Box;
         runtime->register_entity(b);
     }
-    runtime->register_entity(bert);
+
+}
+int main(void){
+    Runtime * runtime = Runtime::New();
     runtime->Run();
 }

@@ -25,7 +25,6 @@
       }
       dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
    }
-   m_texture = m_runtime->load_texture_by_name("trollface.png");
    set_location(get_location()+input*dist*dt);
    const int sz = 100;
  }
@@ -35,6 +34,7 @@
    set_location({0,0});
    m_collision.height = 27;
    m_collision.width = 32;
+   m_texture = m_runtime->load_texture_by_name("trollface.png");
    runtime->set_entity_as_origin(this_ref, get_location());
  }
  void Player::on_render(){
