@@ -178,37 +178,13 @@ Collision ColTree::box_trace(Vector2 start, Vector2 end, Rectangle rec, std::vec
         max_dist = 3;
     }
     Vector2 Direction = Vector2Normalize(end-start);
-    float delta = 1;
+    Vector2 previous = {current.x, current.y};
+    float delta = 0.1;
     std::vector<Vector2> hits = {};
     float dx = m_max.x-m_min.x;
     float dy = m_max.y-m_min.y;
     float mx = m_min.x;
     float my = m_min.y;
-    {
-        float lx = ((current.x-mx)/dx)*stride;
-        float ly = ((current.y-my)/dy)*stride;
-        float gx = (((current.x-mx+current.width)/dx)*stride);
-        float gy = (((current.y-my+current.height)/dy)*stride);
-        Vector2 loc1 = {lx,ly};
-        Vector2 loc2 = {gx,ly};        
-        Vector2 loc3 = {lx,gy};
-        Vector2 loc4 = {gx,gy};
-        Vector2 locs[] = {loc1,loc2, loc3, loc4};
-        for(int i =0; i<4; i++){
-            if( locs[i].x<0 || locs[i].x>stride || locs[i].y<0 || locs[i].y>stride){
-                continue;
-            }
-            std::vector<EntityBB> & ref = m_area[(int)(locs[i].x)+(int)(locs[i].y)*stride];
-            for(int i =0; i<ref.size(); i++){
-                if(ref[i].Parent == to_ignore){
-                    continue;
-                }
-                if(CheckCollisionRecs(ref[i].box, current)){
-                    return {true, {current.x,current.y},{1,0},ref[i].Parent};
-                }
-            }
-        }
-    }
     while(dist<=max_dist){
         float lx = ((current.x-mx)/dx)*stride;
         float ly = ((current.y-my)/dy)*stride;
@@ -232,10 +208,11 @@ Collision ColTree::box_trace(Vector2 start, Vector2 end, Rectangle rec, std::vec
                     continue;
                 }
                 if(CheckCollisionRecs(ref[i].box, current)){
-                    return {true, {current.x,current.y},{1,0},ref[i].Parent};
+                    return {true, previous,{1,0},ref[i].Parent};
                 }
             }
         }
+        previous = {current.x, current.y};
         current.x += Direction.x*delta;
         current.y += Direction.y*delta;
         dist += delta;

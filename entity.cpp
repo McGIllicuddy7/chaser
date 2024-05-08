@@ -36,3 +36,6 @@ void Entity::on_damage(float damage,ResourceRef other){
 EntityBB Entity::get_bb(){
    return {this->m_this_ref, this->m_collision};
 }
+uint8_t Entity::get_render_depth(){
+   return m_depth;
+}

@@ -3,7 +3,7 @@
 #include "player.h"
 #include "box.h"
 int main(void){
-    printf("%zu\n", sizeof( Player));
+    printf("%zu\n", sizeof(Entity));
     Runtime * runtime = Runtime::New();
     Player *bert = new Player;
     for(int i =0; i<1000; i++){

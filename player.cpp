@@ -23,7 +23,7 @@
          c.collided_with = m_this_ref;
          e->on_collision(c);
       }
-      dist = Vector2Distance(this->get_location(), c.location);
+      dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
    }
    set_location(get_location()+input*dist*dt);
    const int sz = 100;

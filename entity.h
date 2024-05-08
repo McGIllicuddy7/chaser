@@ -22,6 +22,7 @@ class Entity{
     ResourceRef m_this_ref;
     Rectangle m_collision;
     Vector2 m_velocity;
+    uint8_t m_depth = 3;
 public:
     virtual void on_tick();
     virtual void on_init(Runtime * runtime, ResourceRef this_ref);
@@ -33,6 +34,7 @@ public:
     Vector2 get_location();
     Vector2 get_velocity();
     EntityBB get_bb();
+    uint8_t get_render_depth();
     virtual void on_damage(float damage,ResourceRef other);
 };
 void cleanup(Entity * entity);
