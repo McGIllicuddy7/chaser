@@ -1,10 +1,10 @@
 #pragma once
-#include "entity.h"
-class Box:public Entity{
-    float m_hit;
+#include "../engine/entity.h"
+class Player:public Entity{
+    ResourceRef m_texture;
     public:
     void on_tick();
     void on_init(Runtime * runtime, ResourceRef this_ref);
     void on_render();
-    void on_collision(Collision col);
+    void on_destroy();
 };

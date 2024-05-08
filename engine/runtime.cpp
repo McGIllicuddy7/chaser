@@ -30,10 +30,17 @@ void Runtime::set_relative_locations(){
     }
 }
 void Runtime::Tick(){
+    for(int j =0; j<num_layers; j++){
+        m_to_draw[j].clear();
+    }
     for(int i =0; i<m_entities.cache_size(); i++){
         Entity * e = m_entities.get_unchecked(i);
         if (e){
             e->on_tick();
+            if(e->get_render_depth()<0 || e->get_render_depth()>=num_layers){
+                continue;
+            } 
+            m_to_draw[e->get_render_depth()].push_back(ResourceRef{(size_t)i, (size_t)m_entities.get_generation(i)});
         }
     }
 }
@@ -45,11 +52,8 @@ void Runtime::Render(){
             Entity * e = get_entity(m_to_draw[j][i]);
             if(e){
                 e->on_render();
-            } else{
-                m_to_draw[j].erase(m_to_draw[j].begin()+i, m_to_draw[j].begin()+i);
-                i--;
             }
-        }
+        } 
     }
     DrawFPS(600,80);
     EndDrawing();
@@ -75,11 +79,6 @@ ResourceRef Runtime::register_entity(Entity *e){
     auto handle = m_entities.emplace(e);
     e->on_init(this, handle);
     int depth = e->get_render_depth();
-    if(depth<0 || depth >=num_layers){
-        goto done;
-    }
-    m_to_draw[depth].push_back(handle);
-    done:
     return handle;
 }
 Entity * Runtime::get_entity(ResourceRef ref){

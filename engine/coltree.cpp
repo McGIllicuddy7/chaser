@@ -54,7 +54,7 @@ Collision Runtime::line_trace(Vector2 start, Vector2 end,ResourceRef to_ignore){
 void ColTree::initialize(std::vector<EntityBB> &collisions,Vector2 min, Vector2 max){
     for(int i = 0; i<stride*stride; i++){
         m_area[i].clear();
-        m_area[i].reserve(32);
+        m_area[i].reserve(16);
     }
     m_min = min;
     m_max = max;
