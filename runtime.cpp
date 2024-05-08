@@ -38,33 +38,28 @@ void Runtime::Tick(){
     }
 }
 void Runtime::Render(){
-//    BeginDrawing();
-//    ClearBackground(BLACK);
+    BeginDrawing();
+    ClearBackground(BLACK);
     for(int i =0; i<m_entities.cache_size(); i++){
         Entity * e = m_entities.get_unchecked(i);
         if (e){
             (e)->on_render();
         }
     }
-    char t[100] = {};
-    snprintf(t, 100, "x_dist:%f y_dist:%f", m_col_tree.xdiv, m_col_tree.ydiv); 
     DrawFPS(600,80);
-  //  EndDrawing();
+    EndDrawing();
 }
 void Runtime::Run(){
     SetTraceLogLevel(LOG_ERROR);
     InitWindow(m_screen_width, m_screen_height, m_name.c_str());
     SetTargetFPS(60);
     while(!WindowShouldClose()){
-        BeginDrawing();
-        ClearBackground(BLACK);
         frame_collision_set_up();
         Tick();
         if(m_use_entity_as_origin){
             set_relative_locations();
         }
         Render();
-        EndDrawing();
     }
 }
 Vector2 Runtime::convert_world_to_screen(Vector2 v) const{

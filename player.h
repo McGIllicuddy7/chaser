@@ -1,6 +1,7 @@
 #pragma once
 #include "entity.h"
 class Player:public Entity{
+    ResourceRef m_texture;
     public:
     void on_tick();
     void on_init(Runtime * runtime, ResourceRef this_ref);
