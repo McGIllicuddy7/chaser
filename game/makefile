@@ -1,2 +1,3 @@
-make: box.cpp init_script.cpp player.cpp ../engine/engine.a
-	g++ box.cpp init_script.cpp player.cpp ../engine/engine.a -l raylib -g3 -std=c++20
+make: init_script.cpp ../engine/engine.a
+	g++ init_script.cpp ../engine/engine.a -l raylib -g3 -std=c++20
+ 
