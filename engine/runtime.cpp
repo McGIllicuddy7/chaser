@@ -4,6 +4,7 @@
 #include <time.h>
 #include <raymath.h>
 extern void initscript(Runtime * runtime);
+Runtime * rt =0;
 Runtime::~Runtime(){
     CloseWindow();
 }
@@ -14,7 +15,9 @@ Runtime::Runtime( int width,int height, const char * name){
     srand(time(0));
 }
 Runtime* Runtime:: New(){
-    return new Runtime(640*1.5, 480*1.5, "hello sailor");
+    Runtime * out =  new Runtime(640*1.5, 480*1.5, "hello sailor");
+    rt = out;
+    return out;
 }
 void Runtime::set_relative_locations(){
     Entity * origin = get_entity(m_origin_entity);
@@ -77,7 +80,7 @@ Vector2 Runtime::convert_world_to_screen(Vector2 v) const{
 }
 ResourceRef Runtime::register_entity(Entity *e){
     auto handle = m_entities.emplace(e);
-    e->on_init(this, handle);
+    e->on_init(handle);
     int depth = e->get_render_depth();
     return handle;
 }
@@ -133,4 +136,46 @@ int Runtime::screen_width(){
 }
 void Runtime::destroy_entity(ResourceRef ref){
     m_entities.remove(ref);
+}
+Vector2 convert_world_to_screen(Vector2 v){
+    return rt->convert_world_to_screen(v);
+}
+ResourceRef register_entity(Entity *e){
+    return rt->register_entity(e);
+}
+void set_entity_as_origin(ResourceRef ref, Vector2 Offset){
+    rt->set_entity_as_origin(ref, Offset);
+}
+void unset_entity_as_origin(){
+    rt->unset_entity_as_origin();
+}
+bool is_origin_set(){
+    return rt->origin_set();
+}
+Entity * get_entity(ResourceRef ref){
+    return rt->get_entity(ref);
+}
+void destroy_entity(ResourceRef ref){
+    rt->destroy_entity(ref);
+}
+Collision line_trace(Vector2 start, Vector2 end,ResourceRef to_ignore){
+    return rt->line_trace(start, end, to_ignore);
+}
+Collision box_trace(Vector2 start, Vector2 end, Rectangle rec,ResourceRef to_ignore){
+    return rt->box_trace(start, end,rec, to_ignore);
+}
+int screen_height(){
+    return rt->screen_height();
+}
+int screen_width(){
+    return rt->screen_width();
+}
+ResourceRef load_texture_by_name(std::string texture){
+    return rt->load_texture_by_name(texture);
+}
+Texture* get_texture(ResourceRef ref){
+    return rt->get_texture(ref);
+}
+void unload_texture(std::string texture){
+    rt->unload_texture(texture);
 }

@@ -5,8 +5,7 @@ void cleanup(Entity * entity){
 }
  void Entity::on_tick(){
  }
- void Entity::on_init(Runtime *runtime, ResourceRef this_ref){
-   m_runtime = runtime;
+ void Entity::on_init(ResourceRef this_ref){
    m_this_ref = this_ref;
  }
  void Entity::on_render(){

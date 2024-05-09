@@ -1,10 +1,10 @@
 #pragma once
-#include "../engine/entity.h"
+#include "engine.h"
 class Player:public Entity{
     ResourceRef m_texture;
     public:
     void on_tick();
-    void on_init(Runtime * runtime, ResourceRef this_ref);
+    void on_init(ResourceRef this_ref);
     void on_render();
     void on_destroy();
 };

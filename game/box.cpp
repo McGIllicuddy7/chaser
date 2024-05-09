@@ -8,8 +8,7 @@
     }
   }
  }
- void Box::on_init(Runtime *runtime, ResourceRef this_ref){
-    m_runtime = runtime;
+ void Box::on_init(ResourceRef this_ref){
     m_this_ref = this_ref;
     m_collision.x = rand()%10000-5000;
     m_collision.y = rand()%10000-5000;
@@ -17,12 +16,12 @@
     m_collision.height = 32;
 }
  void Box::on_render(){
-  Vector2 loc = m_runtime->convert_world_to_screen({m_collision.x, m_collision.y});
+  Vector2 loc = convert_world_to_screen({m_collision.x, m_collision.y});
   if( m_hit<=0){
-    DrawRectangleV(m_runtime->convert_world_to_screen({m_collision.x, m_collision.y}), Vector2{32, 32,}, BLUE);
+    DrawRectangleV(convert_world_to_screen({m_collision.x, m_collision.y}), Vector2{32, 32,}, BLUE);
   }
   else{
-    DrawRectangleV(m_runtime->convert_world_to_screen({m_collision.x, m_collision.y}), Vector2{32, 32,}, RED);
+    DrawRectangleV(convert_world_to_screen({m_collision.x, m_collision.y}), Vector2{32, 32,}, RED);
   }
  }
 void Box::on_collision(Collision col){

@@ -18,14 +18,13 @@ struct EntityBB{
 };
 class Entity{
     protected:
-    Runtime * m_runtime;
     ResourceRef m_this_ref;
     Rectangle m_collision;
     Vector2 m_velocity;
     uint8_t m_depth = 3;
 public:
     virtual void on_tick();
-    virtual void on_init(Runtime * runtime, ResourceRef this_ref);
+    virtual void on_init( ResourceRef this_ref);
     virtual void on_render();
     void set_location(Vector2 location);
     void set_velocity(Vector2 velocity);
