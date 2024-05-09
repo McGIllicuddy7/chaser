@@ -37,10 +37,10 @@
    m_texture = m_runtime->load_texture_by_name("trollface.png");
    runtime->set_entity_as_origin(this_ref, get_location());
  }
- void Player::on_render(){
-    DrawRectangleV(m_runtime->convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), Vector2{32, 32,}, RAYWHITE);
-   // Texture * tmp = m_runtime->get_texture(m_texture);
-   // DrawTextureV(*tmp, m_runtime->convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), WHITE);
+ void Player::on_render()
+{
+   Texture * tmp = m_runtime->get_texture(m_texture);
+   DrawTextureV(*tmp, m_runtime->convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), WHITE);
  }
 
 void Player::on_destroy(){
