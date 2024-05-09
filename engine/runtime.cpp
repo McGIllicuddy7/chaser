@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <raymath.h>
-extern void init_script(Runtime * runtime);
+extern void initscript(Runtime * runtime);
 Runtime::~Runtime(){
     CloseWindow();
 }
@@ -62,7 +62,7 @@ void Runtime::Run(){
     SetTraceLogLevel(LOG_ERROR);
     InitWindow(m_screen_width, m_screen_height, m_name.c_str());
     SetTargetFPS(60);
-    init_script(this);
+    initscript(this);
     while(!WindowShouldClose()){
         frame_collision_set_up();
         Tick();

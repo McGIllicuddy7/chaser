@@ -28,6 +28,5 @@
 void Box::on_collision(Collision col){
   if (m_hit<=0){
     m_hit = 0.1;
-    m_runtime->destroy_entity(m_this_ref);
   }
 }
