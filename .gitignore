@@ -2,3 +2,7 @@
 a.out
 a.out.dSYM/
 engine/engine.a
+raylib-master/Makefile
+raylib-master/*/Makefile
+raylib-master/CMakeFiles
+raylib-master/*.cmake

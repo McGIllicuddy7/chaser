@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <raymath.h>
+#include <dlfcn.h>
 extern void initscript(Runtime * runtime);
 Runtime * rt =0;
 Runtime::~Runtime(){
@@ -178,4 +179,22 @@ Texture* get_texture(ResourceRef ref){
 }
 void unload_texture(std::string texture){
     rt->unload_texture(texture);
+}
+void Runtime::reset(){
+    if(m_current_level){
+        dlclose(m_current_level);
+    }
+    m_entities.clear();
+    m_origin_entity = ResourceRef();
+    m_use_entity_as_origin = false;
+    m_camera_location = {0,0};
+    m_collisions.clear();
+    m_texture_table.clear();
+    m_textures.clear();
+    for(int i =0; i<num_layers; i++){
+        m_to_draw[i].clear();
+    }
+    for(int i =0; i<m_col_tree.stride; i++){
+        m_col_tree.m_area[i].clear();
+    }
 }

@@ -46,6 +46,9 @@ template <typename T >struct Resource{
     size_t generation(){
         return m_generation;
     }
+    ~Resource(){
+        reset();
+    }
 };
 template <typename T> struct ResourceCache{
     std::vector<Resource<T>> cache; 
@@ -92,4 +95,10 @@ template <typename T> struct ResourceCache{
     int get_generation(size_t ref ){
         return cache[ref].generation();
     }
+    void clear(){
+        cache.clear();
+    }
+    ~ResourceCache(){
+        clear();
+    } 
 };

@@ -23,6 +23,7 @@ struct ColTree{
 
 class Runtime {
     static const int num_layers = 4;
+    void * m_current_level = 0;
     size_t m_screen_height;
     size_t m_screen_width;
     std::string m_name;
@@ -40,10 +41,13 @@ class Runtime {
     void set_relative_locations();
     void Render();
     void frame_collision_set_up();
+    void reset();
     public: 
     ~Runtime();
     Runtime(int height, int width, const char * name);
     static Runtime* New();
+    void load_level(std::string level_name);
+    void load_level_func(void (*load)(Runtime *));
     void Run();
     Vector2 convert_world_to_screen(Vector2 v) const;
     ResourceRef register_entity(Entity *e);
