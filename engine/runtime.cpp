@@ -2,7 +2,7 @@
 #include <raylib.h>
 #include <stdlib.h>
 #include <time.h>
-#include <raymath.h>
+#include "raylib/raymath.h"
 #include <dlfcn.h>
 extern void initscript(Runtime * runtime);
 Runtime * rt =0;

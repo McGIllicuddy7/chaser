@@ -1,5 +1,5 @@
 #pragma once
-#include <raylib.h>
+#include "raylib/raylib.h"
 #include "../engine/ops.h"
 #include "../engine/entity.h"
 #include "../engine/resource.h"

@@ -1,6 +1,6 @@
 #pragma once
-#include <raylib.h>
-#include <raymath.h>
+#include "raylib/raylib.h"
+#include "raylib/raymath.h"
 inline Vector2 operator +(Vector2 a, Vector2 b){
     return Vector2Add(a,b);
 }

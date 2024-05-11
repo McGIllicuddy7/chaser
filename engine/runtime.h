@@ -1,7 +1,7 @@
 #pragma once
 #include <stdlib.h>
 #include <string>
-#include <raylib.h>
+#include "raylib/raylib.h"
 #include "resource.h"
 #include "entity.h"
 #include <map>

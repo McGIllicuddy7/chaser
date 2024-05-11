@@ -1,6 +1,6 @@
 #pragma once
-#include <raylib.h>
-#include <raymath.h>
+#include "raylib/raylib.h"
+#include <raylib/raymath.h>
 #include "resource.h"
 #include "runtime.h"
 #include "ops.h"
