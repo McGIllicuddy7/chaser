@@ -1,5 +1,7 @@
  #include "player.h"
-
+Player::Player(ResourceRef manager){
+  m_manager = manager;
+}
  void Player::on_tick(){
     float dt = GetFrameTime();
     Vector2 input = {0,0};
@@ -43,5 +45,6 @@
  }
 
 void Player::on_destroy(){
-
+  Manager * mn = (Manager*)get_entity(m_manager);
+  mn->player_destroyed();
 }
