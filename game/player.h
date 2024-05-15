@@ -4,10 +4,14 @@
 class Player:public Entity{
     ResourceRef m_texture;
     ResourceRef m_manager;
+    float disp_y;
+    int m_health;
     public:
     Player(ResourceRef manager);
     void on_tick();
     void on_init(ResourceRef this_ref);
     void on_render();
     void on_destroy();
+    void on_collision(Collision col);
+    void on_damage(float damage, ResourceRef Other);
 };

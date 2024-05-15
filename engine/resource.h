@@ -3,6 +3,7 @@
 #include <memory>
 #include <stdint.h>
 #include <stdlib.h>
+#include <assert.h>
 struct ResourceRef{
     size_t idx;
     size_t generation;
@@ -11,24 +12,18 @@ struct ResourceRef{
     }
 };
 template <typename T >struct Resource{
-    T * m_value;
+    std::unique_ptr<T> m_value;
     size_t m_generation;
     void reset(){
-        if(m_value!= nullptr){
-            auto v = m_value;
-            cleanup(v);
-            delete v;
-            m_generation ++;
-            m_value = nullptr;
-        }
+        m_value.release();
     }
     Resource(){
-        m_value= 0;
+        m_value.reset();
         m_generation = 0;
     }
     size_t emplace(T * value){
         reset();
-        m_value = value;
+        m_value.reset(value);
         return m_generation;
     }
     void remove(size_t generation){
@@ -38,10 +33,10 @@ template <typename T >struct Resource{
         if(generation != m_generation){
             return 0;
         }
-        return m_value;
+        return m_value.get();
     }
     T*get_unchecked(){
-        return m_value;
+        return m_value.get();
     }
     size_t generation(){
         return m_generation;

@@ -4,7 +4,7 @@ Player::Player(ResourceRef manager){
 }
  void Player::on_tick(){
       float dt = GetFrameTime();
-      Vector2 input = {0,0};
+      Vector2 input = {-0.0,0};
       if(IsKeyDown(KEY_W)){
           input.y +=-1;
       }
@@ -12,12 +12,18 @@ Player::Player(ResourceRef manager){
           input.y +=1;
       }
       if(IsKeyDown(KEY_A)){
-          input.x -= 1;
+          input.x -= 0.125;
       }
       if(IsKeyDown(KEY_D)){
-          input.x +=1;
+          input.x +=0.125;
       }
-      float dist = 200;
+      if(input.y>0 && disp_y>500){
+          input.y = 0;
+      }
+      if(input.y<0 && disp_y<-500){
+        input.y = 0;
+      }
+      float dist = 500;
     Collision c = box_trace(this->get_location(),this->get_location()+input*dist*dt, m_collision, m_this_ref);
     if(c.hit){
         Entity * e = get_entity(c.collided_with);
@@ -28,6 +34,7 @@ Player::Player(ResourceRef manager){
         dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
     }
     set_location(get_location()+input*dist*dt);
+    disp_y += get_location().y;
     const int sz = 100;
  }
  void Player::on_init(ResourceRef this_ref){
@@ -39,11 +46,27 @@ Player::Player(ResourceRef manager){
     set_entity_as_origin(this_ref, get_location());
  }
  void Player::on_render(){
+  /*
    Texture * tmp =get_texture(m_texture);
-   DrawTextureV(*tmp, convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), WHITE);
+   if(tmp){
+    DrawTextureV(*tmp, convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), WHITE);
+   }*/
+   DrawRectangleV(convert_world_to_screen(Vector2{m_collision.x, m_collision.y}),{32,27}, WHITE);
   }
 
 void Player::on_destroy(){
   Manager * mn = (Manager*)get_entity(m_manager);
-  mn->player_destroyed();
+  if(mn){
+    mn->player_destroyed();
+  }
+}
+void Player::on_collision(Collision col){
+
+}
+void Player::on_damage(float damage, ResourceRef other){
+    m_health -= damage;
+    if(m_health<=0){
+      destroy_entity(m_this_ref);
+      on_destroy();
+    }
 }

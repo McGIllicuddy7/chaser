@@ -179,7 +179,7 @@ Collision ColTree::box_trace(Vector2 start, Vector2 end, Rectangle rec, std::vec
     }
     Vector2 Direction = Vector2Normalize(end-start);
     Vector2 previous = {current.x, current.y};
-    float delta = 0.1;
+    float delta = 0.5;
     std::vector<Vector2> hits = {};
     float dx = m_max.x-m_min.x;
     float dy = m_max.y-m_min.y;

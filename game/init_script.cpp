@@ -3,5 +3,5 @@
 #include "manager.h"
 void initscript(Runtime *runtime){
     Manager * manager = new Manager(runtime);
-    runtime->register_entity(manager);
+    auto r = runtime->register_entity(manager);
 }

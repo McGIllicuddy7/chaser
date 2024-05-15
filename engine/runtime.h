@@ -26,6 +26,7 @@ class Runtime {
     void * m_current_level = 0;
     size_t m_screen_height;
     size_t m_screen_width;
+    bool m_reset;
     std::string m_name;
     ResourceCache<Entity> m_entities;
     ResourceRef m_origin_entity;
@@ -36,13 +37,17 @@ class Runtime {
     std::map<std::string, ResourceRef> m_texture_table;
     ResourceCache<Texture> m_textures;
     std::vector<ResourceRef> m_to_draw[num_layers];
+    std::vector<ResourceRef> m_entity_destroy_queue;
     protected:
     void Tick();
     void set_relative_locations();
     void Render();
     void frame_collision_set_up();
+    void collect_dead();
     public: 
     void reset();
+    void call_reset();
+    void clear_all_but(std::vector<ResourceRef> r);
     ~Runtime();
     Runtime(int height, int width, const char * name);
     static Runtime* New();

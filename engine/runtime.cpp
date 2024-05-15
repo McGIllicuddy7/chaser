@@ -33,6 +33,12 @@ void Runtime::set_relative_locations(){
         }
     }
 }
+void Runtime::collect_dead(){
+    for(int i=0; i<m_entity_destroy_queue.size(); i++){
+        m_entities.remove(m_entity_destroy_queue[i]);
+    }
+    m_entity_destroy_queue.clear();
+}
 void Runtime::Tick(){
     for(int j =0; j<num_layers; j++){
         m_to_draw[j].clear();
@@ -66,14 +72,21 @@ void Runtime::Run(){
     SetTraceLogLevel(LOG_ERROR);
     InitWindow(m_screen_width, m_screen_height, m_name.c_str());
     SetTargetFPS(60);
+    restart:
     initscript(this);
     while(!WindowShouldClose()){
         frame_collision_set_up();
         Tick();
+        if(m_reset){
+            m_reset = false;
+            reset();
+            goto restart;
+        }
         if(m_use_entity_as_origin){
             set_relative_locations();
         }
         Render();
+        collect_dead();
     }
 }
 Vector2 Runtime::convert_world_to_screen(Vector2 v) const{
@@ -136,7 +149,7 @@ int Runtime::screen_width(){
     return m_screen_width;
 }
 void Runtime::destroy_entity(ResourceRef ref){
-    m_entities.remove(ref);
+    m_entity_destroy_queue.push_back(ref);
 }
 Vector2 convert_world_to_screen(Vector2 v){
     return rt->convert_world_to_screen(v);
@@ -181,13 +194,12 @@ void unload_texture(std::string texture){
     rt->unload_texture(texture);
 }
 void Runtime::reset(){
+    m_reset = false;
     if(m_current_level){
         dlclose(m_current_level);
     }
-    m_entities.clear();
-    m_origin_entity = ResourceRef();
     m_use_entity_as_origin = false;
-    m_camera_location = {0,0};
+    m_entities.clear();
     m_collisions.clear();
     m_texture_table.clear();
     m_textures.clear();
@@ -196,5 +208,25 @@ void Runtime::reset(){
     }
     for(int i =0; i<m_col_tree.stride*m_col_tree.stride; i++){
         m_col_tree.m_area[i].clear();
+    }
+    collect_dead();
+}
+void Runtime::call_reset(){
+    m_reset = true;
+}
+void Runtime::clear_all_but(std::vector<ResourceRef> r){
+    for(int i =0; i<m_entities.cache_size(); i++){
+        bool contained = false;
+        for(int j =0; j<r.size(); j++){
+            if(r[j].idx == i){
+                if(m_entities.get_generation(i) == r[j].generation){
+                    contained = true;
+                    break;
+                }
+            }
+        }
+        if(!contained){
+            this->destroy_entity(ResourceRef{.idx = (size_t)i, .generation = (size_t)(m_entities.get_generation(i))});
+        }
     }
 }
