@@ -196,7 +196,7 @@ Collision ColTree::box_trace(Vector2 start, Vector2 end, Rectangle rec, std::vec
         Vector2 loc4 = {gx,gy};
         Vector2 locs[] = {loc1,loc2, loc3, loc4};
         for(int i =0; i<4; i++){
-            if( locs[i].x<0 || locs[i].x>stride || locs[i].y<0 || locs[i].y>stride){
+            if( (int)locs[i].x<0 || (int)locs[i].x>=stride ||(int) locs[i].y<0 || (int)locs[i].y>=stride){
                 continue;
             }
             if(v_contains(hits, locs[i])){

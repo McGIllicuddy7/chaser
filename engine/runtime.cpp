@@ -194,7 +194,7 @@ void Runtime::reset(){
     for(int i =0; i<num_layers; i++){
         m_to_draw[i].clear();
     }
-    for(int i =0; i<m_col_tree.stride; i++){
+    for(int i =0; i<m_col_tree.stride*m_col_tree.stride; i++){
         m_col_tree.m_area[i].clear();
     }
 }
