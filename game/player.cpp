@@ -1,4 +1,5 @@
  #include "player.h"
+ #include "bullet.h"
 Player::Player(ResourceRef manager){
     m_manager = manager;
 }
@@ -23,7 +24,7 @@ Player::Player(ResourceRef manager){
       if(input.y<0 && disp_y<-500){
         input.y = 0;
       }
-      float dist = 500;
+      float dist = 400;
     Collision c = box_trace(this->get_location(),this->get_location()+input*dist*dt, m_collision, m_this_ref);
     if(c.hit){
         Entity * e = get_entity(c.collided_with);
@@ -36,6 +37,12 @@ Player::Player(ResourceRef manager){
     set_location(get_location()+input*dist*dt);
     disp_y += get_location().y;
     const int sz = 100;
+    if(IsKeyPressed(KEY_SPACE)){
+        Bullet * a = new Bullet(get_location()+Vector2{20,-10}, {600,0});
+        Bullet * b = new Bullet(get_location()+Vector2{20,10}, {600,0});
+        register_entity(a);
+        register_entity(b);
+    }
  }
  void Player::on_init(ResourceRef this_ref){
     m_this_ref = this_ref;

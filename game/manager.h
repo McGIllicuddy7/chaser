@@ -5,6 +5,8 @@ class Manager:public Entity{
     bool started;
     bool end_screen;
     void * m_runtime;
+    int ship_count;
+    int desired_ship_count;
     ResourceRef player;
     std::vector<ResourceRef> ships;
     public:

@@ -8,7 +8,7 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
 }
  void Enemy::on_tick(){ 
     float dt = GetFrameTime();
-    Vector2 input = {float(rand()%8-4)/8,float((rand()%2)-1)};
+    Vector2 input = Vector2{.x =(float)(((double)(rand()%2-1))/3.0),.y =float((rand()%2)-1)};
     if(get_location().y>0){
         if(rand()%4 == 0&&!(get_location().y>320)){
             input.y = 1;
@@ -22,8 +22,27 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
             input.y = 1;
         }
     }
-    float dist = 400;
-    Collision c = box_trace(this->get_location(),this->get_location()+input*dist*dt, m_collision, m_this_ref);
+    if(get_location().x<100){
+        input.x =0.33;
+    }
+    if(get_location().x>320){
+        input.x = -0.33;
+    }
+    m_velocity = m_velocity+input*4*dt;
+    if(m_velocity.x>0.33){
+        m_velocity.x = 0.33;
+    }
+    if(m_velocity.x<-0.33){
+        m_velocity.x = -0.33;
+    } 
+    if(m_velocity.y>1){
+        m_velocity.x = 1;
+    }
+    if(m_velocity.x<-1){
+        m_velocity.x = -1;
+    }  
+    float dist = 300;
+    Collision c = box_trace(this->get_location(),this->get_location()+m_velocity*dist*dt, m_collision, m_this_ref);
     if(c.hit){
         Entity * e = get_entity(c.collided_with);
         if(e){
@@ -38,7 +57,7 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
         register_entity(a);
         register_entity(b);
     }
-    set_location(get_location()+input*dist*dt);
+    set_location(get_location()+m_velocity*dist*dt);
     const int sz = 100;
  }
  void Enemy::on_init(ResourceRef this_ref){
@@ -55,6 +74,7 @@ void Enemy::on_damage(float damage, ResourceRef Other){
     m_health -= damage;
     if(m_health<=0){
         destroy_entity(m_this_ref);
+        on_destroy();
     }
 }
 void Enemy::on_destroy(){
