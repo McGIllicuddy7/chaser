@@ -41,8 +41,8 @@ class Runtime {
     void set_relative_locations();
     void Render();
     void frame_collision_set_up();
-    void reset();
     public: 
+    void reset();
     ~Runtime();
     Runtime(int height, int width, const char * name);
     static Runtime* New();
