@@ -52,8 +52,8 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
         dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
     }
     if(rand()%128 == 0){
-        Bullet * a = new Bullet(get_location()+Vector2{-20,-10}, {-600,0});
-        Bullet * b = new Bullet(get_location()+Vector2{-20,10}, {-600,0});
+        Bullet * a = new Bullet(get_location()+Vector2{-25,-10}, {-600,0});
+        Bullet * b = new Bullet(get_location()+Vector2{-25,10}, {-600,0});
         register_entity(a);
         register_entity(b);
     }
