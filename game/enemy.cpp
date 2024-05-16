@@ -1,5 +1,6 @@
  #include "enemy.h"
  #include "bullet.h"
+ #include "weapons.h"
 Enemy::Enemy(ResourceRef manager, Vector2 location){
     m_manager = manager;
     m_collision.x = location.x;
@@ -67,15 +68,20 @@ void Enemy::handle_movement(){
     m_velocity = (new_loc-old_loc)/GetFrameTime();
 }
 void Enemy::handle_firing(){
+    if(fired>0){
+        fired -= GetFrameTime();
+    }
     Collision c = line_trace(get_location()+Vector2{-32,0}, get_location()+Vector2{-64,0},m_this_ref);
     if(c.hit){
         return;
     }
     if(rand()%128 == 0){
-        Bullet * a = new Bullet(get_location()+Vector2{-32,-10}, Vector2{-600,0}+m_velocity,m_this_ref);
-        Bullet * b = new Bullet(get_location()+Vector2{-32,10}, Vector2{-600,0}+m_velocity,m_this_ref);
-        register_entity(a);
-        register_entity(b);
+        fired = 0.1;
+        Collision a= fire_laser(get_location()+Vector2{-32,-10}, Vector2{-1,0}, m_this_ref);
+        Collision b = fire_laser(get_location()+Vector2{-32,10}, Vector2{-1,0}, m_this_ref);
+        hits[0] = a;
+        hits[1] = b;
+
     }
 }
  void Enemy::on_tick(){ 
@@ -86,11 +92,16 @@ void Enemy::handle_firing(){
     m_this_ref = this_ref;
     m_collision.height = 32;
     m_collision.width = 48;
+    fired = 0;
     m_texture = load_texture_by_name("enemy_ship_engines.png");
  }
  void Enemy::on_render(){
     Texture * tmp =get_texture(m_texture);
     DrawTextureV(*tmp, convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), WHITE);
+    if(fired>0){
+        DrawLineEx(convert_world_to_screen(get_location()+Vector2{-32,-10}), convert_world_to_screen(hits[0].location), 1, {255,0,0,64});
+        DrawLineEx(convert_world_to_screen(get_location()+Vector2{-32,10}), convert_world_to_screen(hits[1].location), 1, {255,0,0,64});
+    }
 }
 void Enemy::on_damage(float damage, ResourceRef Other){
     m_health -= damage;

@@ -4,8 +4,11 @@
 class Player:public Entity{
     ResourceRef m_texture;
     ResourceRef m_manager;
+    Vector2 m_momentum;
     float disp_y;
     int m_health;
+    float fired;
+    Collision hit;
     public:
     Player(ResourceRef manager);
     void on_tick();

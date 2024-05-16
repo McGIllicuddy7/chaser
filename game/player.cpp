@@ -1,5 +1,5 @@
  #include "player.h"
- #include "bullet.h"
+ #include "weapons.h"
 Player::Player(ResourceRef manager){
     m_manager = manager;
 }
@@ -7,17 +7,19 @@ Player::Player(ResourceRef manager){
       Vector2 old_loc = get_location();
       float dt = GetFrameTime();
       Vector2 input = {-0.0,0};
+      float y_speed = 1;
+      float x_speed = 0.25;
       if(IsKeyDown(KEY_W)){
-          input.y +=-1;
+          input.y +=-y_speed;
       }
       if(IsKeyDown(KEY_S)){
-          input.y +=1;
+          input.y +=y_speed;
       }
       if(IsKeyDown(KEY_A)){
-          input.x -= 0.125;
+          input.x -= x_speed;
       }
       if(IsKeyDown(KEY_D)){
-          input.x +=0.125;
+          input.x +=x_speed;
       }
       if(input.y>0 && disp_y>500){
           input.y = 0;
@@ -25,8 +27,27 @@ Player::Player(ResourceRef manager){
       if(input.y<0 && disp_y<-500){
         input.y = 0;
       }
+      if(input.x == 0){
+        input.x = -m_momentum.x;
+      }
+      if(input.y == 0){
+        input.y = -m_momentum.y;
+      }
+      m_momentum = m_momentum+input*dt*8;
+      if(m_momentum.y>y_speed){
+        m_momentum.y = y_speed;
+      }
+      if(m_momentum.y<-y_speed){
+        m_momentum.y = -y_speed;
+      }
+      if(m_momentum.x>x_speed){
+        m_momentum.x = x_speed;
+      }
+      if(m_momentum.x<-x_speed){
+        m_momentum.x = -x_speed;
+      }
       float dist = 400;
-    Collision c = box_trace(this->get_location(),this->get_location()+input*dist*dt, m_collision, m_this_ref);
+    Collision c = box_trace(this->get_location(),this->get_location()+m_momentum*dist*dt, m_collision, m_this_ref);
     if(c.hit){
         Entity * e = get_entity(c.collided_with);
         if(e){
@@ -35,14 +56,18 @@ Player::Player(ResourceRef manager){
         }
         dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
     }
-    set_location(get_location()+input*dist*dt);
+    set_location(get_location()+m_momentum*dist*dt);
     disp_y += get_location().y;
     Vector2 new_loc = get_location();
     m_velocity = (new_loc-old_loc)/GetFrameTime();
     const int sz = 100;
+    if(fired>0){
+      fired -= dt;
+    }
     if(IsKeyPressed(KEY_SPACE)){
-        Bullet * b = new Bullet(get_location()+Vector2{-20,0}, Vector2{600,0}+m_velocity,m_this_ref);
-        register_entity(b);
+      fired = 0.1;
+      Collision a = fire_laser(get_location()+Vector2{-32,-10}, Vector2{1,0}, m_this_ref);
+      hit = a;
     }
  }
  void Player::on_init(ResourceRef this_ref){
@@ -50,6 +75,7 @@ Player::Player(ResourceRef manager){
     set_location({0,0});
     m_collision.height = 32;
     m_collision.width = 48;
+    fired = 0;
     m_texture = load_texture_by_name("friendly_ship_engines.png");
     set_entity_as_origin(this_ref,{200,0});
  }
@@ -58,7 +84,9 @@ Player::Player(ResourceRef manager){
    if(tmp){
     DrawTextureV(*tmp, convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), WHITE);
    }
-   //DrawRectangleV(convert_world_to_screen(Vector2{m_collision.x, m_collision.y}),{32,27}, WHITE);
+   if(fired>0){
+      DrawLineEx(convert_world_to_screen(get_location()+Vector2{-32,0}),convert_world_to_screen(hit.location), 1, {255, 0,0,64});
+   }
   }
 
 void Player::on_destroy(){
