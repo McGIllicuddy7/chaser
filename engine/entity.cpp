@@ -38,3 +38,6 @@ EntityBB Entity::get_bb(){
 uint8_t Entity::get_render_depth(){
    return m_depth;
 }
+size_t Entity::get_id(){
+   return 0;
+}

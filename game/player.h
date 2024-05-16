@@ -15,4 +15,5 @@ class Player:public Entity{
     void on_destroy();
     void on_collision(Collision col);
     void on_damage(float damage, ResourceRef Other);
+    size_t get_id();
 };

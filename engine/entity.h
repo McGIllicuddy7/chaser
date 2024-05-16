@@ -35,5 +35,6 @@ public:
     EntityBB get_bb();
     uint8_t get_render_depth();
     virtual void on_damage(float damage,ResourceRef other);
+    virtual size_t get_id();
 };
 void cleanup(Entity * entity);

@@ -62,7 +62,8 @@ Player::Player(ResourceRef manager){
     m_velocity = (new_loc-old_loc)/GetFrameTime();
     const int sz = 100;
     if(IsKeyPressed(KEY_SPACE)){
-      Collision a = fire_laser(get_location()+Vector2{-32,0}, Vector2{1,0}, m_this_ref);
+        fire_laser(get_location()+Vector2{-32,-5}, Vector2{1,0}, m_this_ref);
+        fire_laser(get_location()+Vector2{-32,5}, Vector2{1,0}, m_this_ref);;
     }
  }
  void Player::on_init(ResourceRef this_ref){
@@ -71,6 +72,7 @@ Player::Player(ResourceRef manager){
     m_collision.height = 32;
     m_collision.width = 48;
     m_health = 2;
+    disp_y = 0;
     m_texture = load_texture_by_name("friendly_ship_engines.png");
     set_entity_as_origin(this_ref,{200,0});
  }
@@ -96,4 +98,7 @@ void Player::on_damage(float damage, ResourceRef other){
       destroy_entity(m_this_ref);
       on_destroy();
     }
+}
+size_t Player::get_id(){
+  return 1;
 }

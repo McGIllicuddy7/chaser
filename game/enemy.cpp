@@ -9,18 +9,10 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
 }
 Vector2 Enemy::calculate_input(){
     Vector2 input = Vector2{.x =(float)(((double)(rand()%2-1))/3.0),.y =float((rand()%2)-1)};
-    if(get_location().y>0){
-        if(rand()%4 == 0){
-            input.y = 1;
-        } else{
-            input.y = -1;
-        }
-    } else if (get_location().y<0){
-        if(rand()%4== 0){
-            input.y = -1;
-        } else{
-            input.y = 1;
-        }
+    if(get_location().y>75){
+        input.y = -1;
+    } else if (get_location().y<-75){
+        input.y = 1;
     }
     if(get_location().x<400){
         input.x =0.33;
@@ -68,16 +60,34 @@ void Enemy::handle_movement(){
     m_velocity = (new_loc-old_loc)/GetFrameTime();
 }
 void Enemy::handle_firing(){
-    Collision c = line_trace(get_location()+Vector2{-32,0}, get_location()+Vector2{-64,0},m_this_ref);
-    if(c.hit){
-        return;
-    }
-    if(rand()%128 == 0){
-        fire_laser(get_location()+Vector2{-32,-10}, Vector2{-1,0}, m_this_ref);
-        fire_laser(get_location()+Vector2{-32,10}, Vector2{-1,0}, m_this_ref);
+    if(shot_timer<=0){
+        Collision c = line_trace(get_location()+Vector2{-32,0}, get_location()+Vector2{-1000,0},m_this_ref);
+        if(!c.hit){
+            if(rand()%512 == 0){
+                fire_laser(get_location()+Vector2{-32,-5}, Vector2{-1,0}, m_this_ref);
+                fire_laser(get_location()+Vector2{-32,5}, Vector2{-1,0}, m_this_ref);
+            }
+            return;
+        }
+        Entity * e = get_entity(c.collided_with);
+        if(e->get_id()  != 1){
+            return;
+        }
+        if(reflex<=0){
+            reflex = 0.25;
+        }
+        reflex -= GetFrameTime();
+        if(reflex<=0){
+            shot_timer = 0.1;
+            fire_laser(get_location()+Vector2{-32,-5}, Vector2{-1,0}, m_this_ref);
+            fire_laser(get_location()+Vector2{-32,5}, Vector2{-1,0}, m_this_ref);
+        }
     }
 }
  void Enemy::on_tick(){ 
+    if(shot_timer>0){
+        shot_timer-= GetFrameTime();
+    }
     handle_movement();
     handle_firing();
  }
@@ -86,6 +96,7 @@ void Enemy::handle_firing(){
     m_collision.height = 32;
     m_collision.width = 48;
     m_health = 2;
+    shot_timer = 0;
     m_texture = load_texture_by_name("enemy_ship_engines.png");
  }
  void Enemy::on_render(){
@@ -102,4 +113,7 @@ void Enemy::on_damage(float damage, ResourceRef Other){
 void Enemy::on_destroy(){
     Manager * mn = (Manager*)get_entity(m_manager);
     mn->ship_destroyed(m_this_ref);
+}
+size_t Enemy::get_id(){
+    return 2;
 }

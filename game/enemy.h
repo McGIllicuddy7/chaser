@@ -5,6 +5,8 @@ class Enemy:public Entity{
     ResourceRef m_manager;
     int m_health;
     Vector2 m_momentum;
+    float shot_timer;
+    float reflex;
     Vector2 calculate_input();
     void handle_movement();
     void handle_firing();
@@ -15,4 +17,5 @@ class Enemy:public Entity{
     void on_render();
     void on_destroy();
     void on_damage(float damage, ResourceRef Other);
+    size_t get_id();
 };
