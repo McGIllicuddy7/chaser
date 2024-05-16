@@ -1,5 +1,6 @@
 #include "weapons.h"
 #include "particles.h"
+#include "bullet.h"
 Collision fire_laser(Vector2 start, Vector2 direction, ResourceRef ref){
     Collision col = line_trace(start, start+direction*1000,ref);
     Vector2 hit_loc = start+direction*1000;
@@ -23,5 +24,13 @@ Collision fire_laser(Vector2 start, Vector2 direction, ResourceRef ref){
     return col;
 }
 void fire_railgun(Vector2 start, Vector2 direction, ResourceRef ref){
-    return;
+    Vector2 dir;
+    if(direction.x != 0 && direction.y !=0 ){
+        dir= Vector2Normalize(direction);
+    }
+    else{
+        dir = {0,0};
+    }
+    Bullet * b =new Bullet(start, dir*800, ref);
+    register_entity(b);
 }

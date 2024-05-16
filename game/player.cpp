@@ -21,7 +21,7 @@ Player::Player(ResourceRef manager){
       if(IsKeyDown(KEY_D)){
           input.x +=x_speed;
       }
-      if(input.y>0 && disp_y>=10090){
+      if(input.y>0 && disp_y>=10000){
           input.y = -1;
       }
       if(input.y<0 && disp_y<=-10000){
@@ -63,7 +63,10 @@ Player::Player(ResourceRef manager){
     const int sz = 100;
     if(IsKeyPressed(KEY_SPACE)){
         fire_laser(get_location()+Vector2{5,-7}, Vector2{1,0}, m_this_ref);
-        fire_laser(get_location()+Vector2{5,7}, Vector2{1,0}, m_this_ref);;
+        fire_laser(get_location()+Vector2{5,7}, Vector2{1,0}, m_this_ref);
+    }
+    if(IsKeyPressed(KEY_Q)){
+      fire_railgun(get_location()+Vector2{5,-0}, Vector2{1000,0}+m_velocity, m_this_ref);
     }
  }
  void Player::on_init(ResourceRef this_ref){

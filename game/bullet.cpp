@@ -7,7 +7,7 @@ void Bullet::on_tick(){
         Entity * e = get_entity(c.collided_with);
         if(e && !(c.collided_with == m_firer)){
             c.collided_with = m_this_ref;
-            e->on_damage(1,m_this_ref);
+            e->on_damage(3,m_this_ref);
             destroy_entity(m_this_ref);
             dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
         }
