@@ -38,9 +38,7 @@ Player::Player(ResourceRef manager){
     disp_y += get_location().y;
     const int sz = 100;
     if(IsKeyPressed(KEY_SPACE)){
-        Bullet * a = new Bullet(get_location()+Vector2{20,-10}, {600,0});
-        Bullet * b = new Bullet(get_location()+Vector2{20,10}, {600,0});
-        register_entity(a);
+        Bullet * b = new Bullet(get_location()+Vector2{20,0}, {600,0});
         register_entity(b);
     }
  }
