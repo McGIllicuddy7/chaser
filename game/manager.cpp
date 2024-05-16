@@ -81,3 +81,6 @@ void Manager::on_render(){
         }
     }
 }
+Entity * Manager::get_player(){
+    return get_entity(player);
+}

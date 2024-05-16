@@ -21,11 +21,11 @@ Player::Player(ResourceRef manager){
       if(IsKeyDown(KEY_D)){
           input.x +=x_speed;
       }
-      if(input.y>0 && disp_y>500){
-          input.y = 0;
+      if(input.y>0 && disp_y>=10090){
+          input.y = -1;
       }
-      if(input.y<0 && disp_y<-500){
-        input.y = 0;
+      if(input.y<0 && disp_y<=-10000){
+        input.y = 1;
       }
       if(input.x == 0){
         input.x = -m_momentum.x;
@@ -57,13 +57,13 @@ Player::Player(ResourceRef manager){
         dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
     }
     set_location(get_location()+m_momentum*dist*dt);
-    disp_y += get_location().y;
+    disp_y += get_location().y-old_loc.y;
     Vector2 new_loc = get_location();
     m_velocity = (new_loc-old_loc)/GetFrameTime();
     const int sz = 100;
     if(IsKeyPressed(KEY_SPACE)){
-        fire_laser(get_location()+Vector2{-32,-5}, Vector2{1,0}, m_this_ref);
-        fire_laser(get_location()+Vector2{-32,5}, Vector2{1,0}, m_this_ref);;
+        fire_laser(get_location()+Vector2{5,-7}, Vector2{1,0}, m_this_ref);
+        fire_laser(get_location()+Vector2{5,7}, Vector2{1,0}, m_this_ref);;
     }
  }
  void Player::on_init(ResourceRef this_ref){
@@ -81,6 +81,9 @@ Player::Player(ResourceRef manager){
    if(tmp){
     DrawTextureV(*tmp, convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), WHITE);
    }
+   char buff[100] = {};
+   snprintf(buff, 99, "displacement %f", disp_y);
+   DrawText(buff, 600, 32, 16, WHITE);
   }
 
 void Player::on_destroy(){
@@ -101,4 +104,7 @@ void Player::on_damage(float damage, ResourceRef other){
 }
 size_t Player::get_id(){
   return 1;
+}
+float Player::y_disp(){
+  return disp_y;
 }

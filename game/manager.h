@@ -16,4 +16,5 @@ class Manager:public Entity{
     void on_render();
     void player_destroyed();
     void ship_destroyed(ResourceRef ship_ref);
+    Entity * get_player();
 };

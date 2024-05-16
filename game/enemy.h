@@ -10,6 +10,7 @@ class Enemy:public Entity{
     Vector2 calculate_input();
     void handle_movement();
     void handle_firing();
+    Entity * get_player();
     public:
     Enemy(ResourceRef manager, Vector2 location);
     void on_tick();

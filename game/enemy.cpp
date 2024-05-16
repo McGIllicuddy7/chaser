@@ -1,17 +1,31 @@
  #include "enemy.h"
  #include "bullet.h"
  #include "weapons.h"
+ #include "player.h"
 Enemy::Enemy(ResourceRef manager, Vector2 location){
     m_manager = manager;
     m_collision.x = location.x;
     m_collision.y = location.y;
     m_health = 1;
 }
+Entity * Enemy::get_player(){
+    Manager * m = (Manager *)get_entity(m_manager);
+    if(!m){
+        return 0;
+    }
+    return m->get_player();
+}
 Vector2 Enemy::calculate_input(){
     Vector2 input = Vector2{.x =(float)(((double)(rand()%2-1))/3.0),.y =float((rand()%2)-1)};
-    if(get_location().y>75){
+    Entity * e =get_player();
+    if(!e){
+        return input;
+    }
+    Player * p = (Player *)e;
+    float delta = (get_location().y-e->get_location().y);
+    if(delta>75 || (p->y_disp()>500 && fabs(delta)<200)){
         input.y = -1;
-    } else if (get_location().y<-75){
+    } else if (delta<=-75|| (p->y_disp()<500 && fabs(delta)<200)){
         input.y = 1;
     }
     if(get_location().x<400){
@@ -31,7 +45,9 @@ void Enemy::handle_movement(){
     float dist = 300;
     Collision c0 = line_trace(this->get_location(),this->get_location()+m_momentum*dist, m_this_ref);
     if(c0.hit){
-        input.y *= -1;
+        if((m_momentum.y>0 && input.y> 0 )|| (m_momentum.y<0 && input.y<0)){
+            input.y *= -1;
+        }
     }
     m_momentum = old_momentum+input*4*dt;
     if(m_momentum.x>0.33){
