@@ -26,7 +26,12 @@ void Bullet::on_init(ResourceRef this_ref){
     m_this_ref = this_ref;
 }
 void Bullet::on_render(){
-    DrawRectangleV(convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), Vector2{m_collision.height, m_collision.width}, PINK);
+    Color c = PINK;
+    c.a = 200;
+    int w = 8;
+    DrawCircleV(convert_world_to_screen(Vector2{m_collision.x+m_collision.width/2, m_collision.y+m_collision.height/2}),w, c);
+    c = WHITE;
+    DrawRectangleV(convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), Vector2{m_collision.height, m_collision.width}, c);
 }
 void Bullet::on_destroy(){
 

@@ -22,7 +22,7 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
             input.y = 1;
         }
     }
-    if(get_location().x<100){
+    if(get_location().x<200){
         input.x =0.33;
     }
     if(get_location().x>320){
