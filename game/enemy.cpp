@@ -16,7 +16,7 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
             input.y = -1;
         }
     } else if (get_location().y<0){
-        if(rand()%2== 0 && !(get_location().y<-320)){
+        if(rand()%4== 0 && !(get_location().y<-320)){
             input.y = -1;
         } else{
             input.y = 1;
@@ -36,10 +36,10 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
         m_velocity.x = -0.33;
     } 
     if(m_velocity.y>1){
-        m_velocity.x = 1;
+        m_velocity.y = 1;
     }
     if(m_velocity.x<-1){
-        m_velocity.x = -1;
+        m_velocity.y = -1;
     }  
     float dist = 300;
     Collision c = box_trace(this->get_location(),this->get_location()+m_velocity*dist*dt, m_collision, m_this_ref);
@@ -51,7 +51,7 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
         }
         dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
     }
-    if(rand()%64 == 0){
+    if(rand()%128 == 0){
         Bullet * a = new Bullet(get_location()+Vector2{-20,-10}, {-600,0});
         Bullet * b = new Bullet(get_location()+Vector2{-20,10}, {-600,0});
         register_entity(a);
@@ -62,9 +62,9 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
  }
  void Enemy::on_init(ResourceRef this_ref){
     m_this_ref = this_ref;
-    m_collision.height = 27;
+    m_collision.height = 32;
     m_collision.width = 32;
-    m_texture = load_texture_by_name("trollface.png");
+    m_texture = load_texture_by_name("nyancat.png");
  }
  void Enemy::on_render(){
     Texture * tmp =get_texture(m_texture);

@@ -33,7 +33,7 @@ void Manager::on_tick(){
         }
     } else{
         if(ship_count<desired_ship_count){
-            if(rand()%128 == 0){
+            if(rand()%64 == 0){
                 Enemy * e = new Enemy(m_this_ref, Vector2{(float)(200+rand()%140),(float)(rand()%screen_height()-screen_height()/2)});
                 ResourceRef r = register_entity(e);
                 ships.push_back(r);
