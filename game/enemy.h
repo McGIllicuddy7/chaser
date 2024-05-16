@@ -5,8 +5,6 @@ class Enemy:public Entity{
     ResourceRef m_manager;
     int m_health;
     Vector2 m_momentum;
-    float fired;
-    Collision hits[2];
     Vector2 calculate_input();
     void handle_movement();
     void handle_firing();

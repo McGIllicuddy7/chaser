@@ -61,13 +61,8 @@ Player::Player(ResourceRef manager){
     Vector2 new_loc = get_location();
     m_velocity = (new_loc-old_loc)/GetFrameTime();
     const int sz = 100;
-    if(fired>0){
-      fired -= dt;
-    }
     if(IsKeyPressed(KEY_SPACE)){
-      fired = 0.1;
-      Collision a = fire_laser(get_location()+Vector2{-32,-10}, Vector2{1,0}, m_this_ref);
-      hit = a;
+      Collision a = fire_laser(get_location()+Vector2{-32,0}, Vector2{1,0}, m_this_ref);
     }
  }
  void Player::on_init(ResourceRef this_ref){
@@ -75,7 +70,7 @@ Player::Player(ResourceRef manager){
     set_location({0,0});
     m_collision.height = 32;
     m_collision.width = 48;
-    fired = 0;
+    m_health = 2;
     m_texture = load_texture_by_name("friendly_ship_engines.png");
     set_entity_as_origin(this_ref,{200,0});
  }
@@ -83,9 +78,6 @@ Player::Player(ResourceRef manager){
    Texture * tmp =get_texture(m_texture);
    if(tmp){
     DrawTextureV(*tmp, convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), WHITE);
-   }
-   if(fired>0){
-      DrawLineEx(convert_world_to_screen(get_location()+Vector2{-32,0}),convert_world_to_screen(hit.location), 1, {255, 0,0,64});
    }
   }
 

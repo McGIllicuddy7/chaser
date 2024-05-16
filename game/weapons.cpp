@@ -1,4 +1,5 @@
 #include "weapons.h"
+#include "particles.h"
 Collision fire_laser(Vector2 start, Vector2 direction, ResourceRef ref){
     Collision col = line_trace(start, start+direction*1000,ref);
     Vector2 hit_loc = start+direction*1000;
@@ -10,6 +11,8 @@ Collision fire_laser(Vector2 start, Vector2 direction, ResourceRef ref){
             e->on_damage(1, ref);
         }
     }
+    LaserBeam * e = new LaserBeam(start, hit_loc, ref);
+    register_entity(e);
     return col;
 }
 void fire_railgun(Vector2 start, Vector2 direction, ResourceRef ref){
