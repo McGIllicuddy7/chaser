@@ -22,10 +22,10 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
             input.y = 1;
         }
     }
-    if(get_location().x<200){
+    if(get_location().x<400){
         input.x =0.33;
     }
-    if(get_location().x>320){
+    if(get_location().x>500){
         input.x = -0.33;
     }
     m_velocity = m_velocity+input*4*dt;
@@ -63,8 +63,8 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
  void Enemy::on_init(ResourceRef this_ref){
     m_this_ref = this_ref;
     m_collision.height = 32;
-    m_collision.width = 32;
-    m_texture = load_texture_by_name("nyancat.png");
+    m_collision.width = 48;
+    m_texture = load_texture_by_name("enemy_ship_engines.png");
  }
  void Enemy::on_render(){
     Texture * tmp =get_texture(m_texture);

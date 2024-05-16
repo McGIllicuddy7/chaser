@@ -25,7 +25,7 @@ void Runtime::set_relative_locations(){
     if(!origin){
         return;
     }
-    Vector2 loc = origin->get_location();
+    Vector2 loc = origin->get_location()+m_camera_location;
     for(int i =0; i<m_entities.cache_size(); i++){
         Entity * e = m_entities.get_unchecked(i);
         if (e){
@@ -104,6 +104,7 @@ Entity * Runtime::get_entity(ResourceRef ref){
 void Runtime::set_entity_as_origin(ResourceRef ref, Vector2 Offset){
     m_origin_entity = ref;
     m_use_entity_as_origin = true;
+    m_camera_location = Offset;
 }
 void Runtime::unset_entity_as_origin(){
     m_use_entity_as_origin = false;

@@ -45,18 +45,17 @@ Player::Player(ResourceRef manager){
  void Player::on_init(ResourceRef this_ref){
     m_this_ref = this_ref;
     set_location({0,0});
-    m_collision.height = 27;
-    m_collision.width = 32;
-    m_texture = load_texture_by_name("trollface.png");
-    set_entity_as_origin(this_ref, get_location());
+    m_collision.height = 32;
+    m_collision.width = 48;
+    m_texture = load_texture_by_name("friendly_ship_engines.png");
+    set_entity_as_origin(this_ref,{200,0});
  }
  void Player::on_render(){
-  /*
    Texture * tmp =get_texture(m_texture);
    if(tmp){
     DrawTextureV(*tmp, convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), WHITE);
-   }*/
-   DrawRectangleV(convert_world_to_screen(Vector2{m_collision.x, m_collision.y}),{32,27}, WHITE);
+   }
+   //DrawRectangleV(convert_world_to_screen(Vector2{m_collision.x, m_collision.y}),{32,27}, WHITE);
   }
 
 void Player::on_destroy(){

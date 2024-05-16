@@ -19,7 +19,7 @@ void Manager::on_tick(){
                 Player * bert = new Player(m_this_ref);
                 player = register_entity(bert);
                 for(int i =0; i<desired_ship_count; i++){
-                    Enemy * e = new Enemy(m_this_ref, Vector2{(float)(200+rand()%140),(float)(rand()%screen_height()-screen_height()/2)});
+                    Enemy * e = new Enemy(m_this_ref, Vector2{(float)(500+rand()%140),(float)(rand()%screen_height()-screen_height()/2)});
                     ResourceRef r = register_entity(e);
                     ships.push_back(r);
                     ship_count++;
@@ -34,7 +34,7 @@ void Manager::on_tick(){
     } else{
         if(ship_count<desired_ship_count){
             if(rand()%64 == 0){
-                Enemy * e = new Enemy(m_this_ref, Vector2{(float)(200+rand()%140),(float)(rand()%screen_height()-screen_height()/2)});
+                Enemy * e = new Enemy(m_this_ref, Vector2{(float)(500+rand()%140),(float)(rand()%screen_height()-screen_height()/2)});
                 ResourceRef r = register_entity(e);
                 ships.push_back(r);
                 ship_count++;
