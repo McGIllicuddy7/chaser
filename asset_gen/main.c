@@ -38,11 +38,11 @@ void generate_engines(Color col){
 }
 void draw(Color col){
     generate_ship(col);
-    generate_engines(BLUE);
+    //generate_engines(BLUE);
 }
 int main(void){
-    const char * name = "friendly_ship_engines.png";
-    bool flipped = 0;
+    const char * name = "friendly_ship.png";
+    bool flipped = 1;
     Color col = DARKBLUE;
     SetTraceLogLevel(LOG_ERROR);
     InitWindow(width, height, "generation");
