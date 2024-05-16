@@ -4,6 +4,7 @@ Player::Player(ResourceRef manager){
     m_manager = manager;
 }
  void Player::on_tick(){
+      Vector2 old_loc = get_location();
       float dt = GetFrameTime();
       Vector2 input = {-0.0,0};
       if(IsKeyDown(KEY_W)){
@@ -36,9 +37,11 @@ Player::Player(ResourceRef manager){
     }
     set_location(get_location()+input*dist*dt);
     disp_y += get_location().y;
+    Vector2 new_loc = get_location();
+    m_velocity = (new_loc-old_loc)/GetFrameTime();
     const int sz = 100;
     if(IsKeyPressed(KEY_SPACE)){
-        Bullet * b = new Bullet(get_location()+Vector2{32,0}, {600,0});
+        Bullet * b = new Bullet(get_location()+Vector2{-20,0}, Vector2{600,0}+m_velocity,m_this_ref);
         register_entity(b);
     }
  }

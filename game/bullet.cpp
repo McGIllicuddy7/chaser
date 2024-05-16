@@ -5,12 +5,12 @@ void Bullet::on_tick(){
     Collision c = box_trace(this->get_location(),this->get_location()+m_velocity*dt, m_collision, m_this_ref);
     if(c.hit){
         Entity * e = get_entity(c.collided_with);
-        if(e){
+        if(e && !(c.collided_with == m_firer)){
             c.collided_with = m_this_ref;
             e->on_damage(1,m_this_ref);
             destroy_entity(m_this_ref);
+            dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
         }
-        dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
     } 
     if(dist>0){
         Vector2 v = Vector2Normalize(m_velocity);
@@ -36,11 +36,13 @@ void Bullet::on_render(){
 void Bullet::on_destroy(){
 
 }
-Bullet::Bullet(Vector2 location, Vector2 velocity){
+Bullet::Bullet(Vector2 location, Vector2 velocity, ResourceRef firer){
     m_collision.x = location.x-2;
     m_collision.y = location.y-2;
     m_collision.height = 4;
     m_collision.width = 4;
     m_velocity = velocity;
+    m_firer = firer;
     m_lf = 2;
+    m_depth = 3;
 }

@@ -4,6 +4,7 @@ class Enemy:public Entity{
     ResourceRef m_texture;
     ResourceRef m_manager;
     int m_health;
+    Vector2 m_momentum;
     public:
     Enemy(ResourceRef manager, Vector2 location);
     void on_tick();

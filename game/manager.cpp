@@ -8,7 +8,7 @@ Manager::Manager(void *runtime){
     started = false;
     end_screen = false;
     ship_count = 0;
-    desired_ship_count = 4;
+    desired_ship_count = 2;
 }
 void Manager::on_tick(){
     Entity * p = get_entity(player);

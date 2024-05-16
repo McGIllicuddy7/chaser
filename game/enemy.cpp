@@ -7,6 +7,7 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
     m_health = 1;
 }
  void Enemy::on_tick(){ 
+    Vector2 old_loc = get_location();
     float dt = GetFrameTime();
     Vector2 input = Vector2{.x =(float)(((double)(rand()%2-1))/3.0),.y =float((rand()%2)-1)};
     if(get_location().y>0){
@@ -28,21 +29,21 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
     if(get_location().x>500){
         input.x = -0.33;
     }
-    m_velocity = m_velocity+input*4*dt;
-    if(m_velocity.x>0.33){
-        m_velocity.x = 0.33;
+    m_momentum = m_momentum+input*4*dt;
+    if(m_momentum.x>0.33){
+        m_momentum.x = 0.33;
     }
-    if(m_velocity.x<-0.33){
-        m_velocity.x = -0.33;
+    if(m_momentum.x<-0.33){
+        m_momentum.x = -0.33;
     } 
-    if(m_velocity.y>1){
-        m_velocity.y = 1;
+    if(m_momentum.y>1){
+        m_momentum.y = 1;
     }
-    if(m_velocity.x<-1){
-        m_velocity.y = -1;
+    if(m_momentum.x<-1){
+        m_momentum.y = -1;
     }  
     float dist = 300;
-    Collision c = box_trace(this->get_location(),this->get_location()+m_velocity*dist*dt, m_collision, m_this_ref);
+    Collision c = box_trace(this->get_location(),this->get_location()+m_momentum*dist*dt, m_collision, m_this_ref);
     if(c.hit){
         Entity * e = get_entity(c.collided_with);
         if(e){
@@ -51,13 +52,15 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
         }
         dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
     }
+    set_location(get_location()+m_momentum*dist*dt);
+    Vector2 new_loc = get_location();
+    m_velocity = (new_loc-old_loc)/GetFrameTime();
     if(rand()%128 == 0){
-        Bullet * a = new Bullet(get_location()+Vector2{-32,-10}, {-600,0});
-        Bullet * b = new Bullet(get_location()+Vector2{-32,10}, {-600,0});
+        Bullet * a = new Bullet(get_location()+Vector2{-32,-10}, Vector2{-600,0}+m_velocity,m_this_ref);
+        Bullet * b = new Bullet(get_location()+Vector2{-32,10}, Vector2{-600,0}+m_velocity,m_this_ref);
         register_entity(a);
         register_entity(b);
     }
-    set_location(get_location()+m_velocity*dist*dt);
     const int sz = 100;
  }
  void Enemy::on_init(ResourceRef this_ref){
