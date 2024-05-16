@@ -13,6 +13,11 @@ Collision fire_laser(Vector2 start, Vector2 direction, ResourceRef ref){
     }
     LaserBeam * e = new LaserBeam(start, hit_loc, ref);
     register_entity(e);
+    ResourceRef r= load_sound_by_name("laserShoot.wav");
+    Sound * s = get_sound(r);
+    if(s){
+        PlaySound(*s);
+    }
     return col;
 }
 void fire_railgun(Vector2 start, Vector2 direction, ResourceRef ref){

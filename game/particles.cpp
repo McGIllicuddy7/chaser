@@ -19,6 +19,6 @@ void LaserBeam::on_tick(){
 void LaserBeam::on_render(){
     Entity * p = get_entity(m_parent);
     if(p){
-        DrawLineEx(convert_world_to_screen(p->get_location()+m_start),convert_world_to_screen(m_end), 1, {255, 0,0,96});
+        DrawLineEx(convert_world_to_screen(p->get_location()+m_start),convert_world_to_screen(m_end), 1, {255, 200,200,255});
     }
 }

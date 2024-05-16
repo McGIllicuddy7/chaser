@@ -72,6 +72,7 @@ void Runtime::Run(){
     SetTraceLogLevel(LOG_ERROR);
     InitWindow(m_screen_width, m_screen_height, m_name.c_str());
     SetTargetFPS(60);
+    InitAudioDevice();
     restart:
     initscript(this);
     while(!WindowShouldClose()){
@@ -194,6 +195,15 @@ Texture* get_texture(ResourceRef ref){
 void unload_texture(std::string texture){
     rt->unload_texture(texture);
 }
+ResourceRef load_sound_by_name(std::string sound){
+    return rt->load_sound_by_name(sound);
+}
+Sound* get_sound(ResourceRef ref){
+    return rt->get_sound(ref);
+}
+void unload_sound(std::string sound){
+    rt->unload_sound(sound);
+}
 void Runtime::reset(){
     m_reset = false;
     if(m_current_level){
@@ -204,6 +214,8 @@ void Runtime::reset(){
     m_collisions.clear();
     m_texture_table.clear();
     m_textures.clear();
+    m_sound_table.clear();
+    m_sounds.clear();
     for(int i =0; i<num_layers; i++){
         m_to_draw[i].clear();
     }

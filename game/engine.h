@@ -17,4 +17,7 @@ int screen_width();
 ResourceRef load_texture_by_name(std::string texture);
 Texture* get_texture(ResourceRef ref);
 void unload_texture(std::string texture);
+ResourceRef load_sound_by_name(std::string sound);
+Sound* get_sound(ResourceRef ref);
+void unload_sound(std::string sound);
 #define SCREEN(V) convert_world_to_screen(v)

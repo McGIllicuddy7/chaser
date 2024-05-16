@@ -36,6 +36,8 @@ class Runtime {
     ColTree m_col_tree;
     std::map<std::string, ResourceRef> m_texture_table;
     ResourceCache<Texture> m_textures;
+    ResourceCache<Sound> m_sounds;
+    std::map<std::string, ResourceRef> m_sound_table;
     std::vector<ResourceRef> m_to_draw[num_layers];
     std::vector<ResourceRef> m_entity_destroy_queue;
     protected:
@@ -51,8 +53,6 @@ class Runtime {
     ~Runtime();
     Runtime(int height, int width, const char * name);
     static Runtime* New();
-    void load_level(std::string level_name);
-    void load_level_func(void (*load)(Runtime *));
     void Run();
     Vector2 convert_world_to_screen(Vector2 v) const;
     ResourceRef register_entity(Entity *e);
@@ -68,4 +68,7 @@ class Runtime {
     ResourceRef load_texture_by_name(std::string texture);
     Texture* get_texture(ResourceRef ref);
     void unload_texture(std::string texture);
+    ResourceRef load_sound_by_name(std::string sound);
+    Sound * get_sound(ResourceRef ref);
+    void unload_sound(std::string sound);
 };

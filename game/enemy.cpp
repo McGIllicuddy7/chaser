@@ -10,13 +10,13 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
 Vector2 Enemy::calculate_input(){
     Vector2 input = Vector2{.x =(float)(((double)(rand()%2-1))/3.0),.y =float((rand()%2)-1)};
     if(get_location().y>0){
-        if(rand()%4 == 0&&!(get_location().y>320)){
+        if(rand()%4 == 0){
             input.y = 1;
         } else{
             input.y = -1;
         }
     } else if (get_location().y<0){
-        if(rand()%4== 0 && !(get_location().y<-320)){
+        if(rand()%4== 0){
             input.y = -1;
         } else{
             input.y = 1;
