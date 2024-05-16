@@ -6,9 +6,7 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
     m_collision.y = location.y;
     m_health = 1;
 }
- void Enemy::on_tick(){ 
-    Vector2 old_loc = get_location();
-    float dt = GetFrameTime();
+Vector2 Enemy::calculate_input(){
     Vector2 input = Vector2{.x =(float)(((double)(rand()%2-1))/3.0),.y =float((rand()%2)-1)};
     if(get_location().y>0){
         if(rand()%4 == 0&&!(get_location().y>320)){
@@ -29,7 +27,20 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
     if(get_location().x>500){
         input.x = -0.33;
     }
+    return input;
+}
+void Enemy::handle_movement(){
+    Vector2 old_loc = get_location();
+    float dt = GetFrameTime();
+    Vector2 input = calculate_input();
+    Vector2 old_momentum = m_momentum;
     m_momentum = m_momentum+input*4*dt;
+    float dist = 300;
+    Collision c0 = line_trace(this->get_location(),this->get_location()+m_momentum*dist, m_this_ref);
+    if(c0.hit){
+        input.y *= -1;
+    }
+    m_momentum = old_momentum+input*4*dt;
     if(m_momentum.x>0.33){
         m_momentum.x = 0.33;
     }
@@ -41,8 +52,7 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
     }
     if(m_momentum.x<-1){
         m_momentum.y = -1;
-    }  
-    float dist = 300;
+    }
     Collision c = box_trace(this->get_location(),this->get_location()+m_momentum*dist*dt, m_collision, m_this_ref);
     if(c.hit){
         Entity * e = get_entity(c.collided_with);
@@ -55,13 +65,22 @@ Enemy::Enemy(ResourceRef manager, Vector2 location){
     set_location(get_location()+m_momentum*dist*dt);
     Vector2 new_loc = get_location();
     m_velocity = (new_loc-old_loc)/GetFrameTime();
+}
+void Enemy::handle_firing(){
+    Collision c = line_trace(get_location()+Vector2{-32,0}, get_location()+Vector2{-64,0},m_this_ref);
+    if(c.hit){
+        return;
+    }
     if(rand()%128 == 0){
         Bullet * a = new Bullet(get_location()+Vector2{-32,-10}, Vector2{-600,0}+m_velocity,m_this_ref);
         Bullet * b = new Bullet(get_location()+Vector2{-32,10}, Vector2{-600,0}+m_velocity,m_this_ref);
         register_entity(a);
         register_entity(b);
     }
-    const int sz = 100;
+}
+ void Enemy::on_tick(){ 
+    handle_movement();
+    handle_firing();
  }
  void Enemy::on_init(ResourceRef this_ref){
     m_this_ref = this_ref;
