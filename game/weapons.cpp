@@ -34,6 +34,11 @@ void fire_railgun(Vector2 start, Vector2 direction, ResourceRef ref){
     }
     Bullet * b =new Bullet(start, dir*2400, ref);
     register_entity(b);
+    ResourceRef r= load_sound_by_name("railgun.wav");
+    Sound * s = get_sound(r);
+    if(s){
+        PlaySound(*s);
+    }
 }
 void spawn_chaff(Vector2 location, Vector2 velocity,ResourceRef ref){
     Chaff * c = new Chaff(location, velocity);
@@ -42,4 +47,9 @@ void spawn_chaff(Vector2 location, Vector2 velocity,ResourceRef ref){
 void fire_missile(Vector2 location, Vector2 velocity, ResourceRef ref, size_t target_id){
     Missile * m = new Missile(location, velocity, ref, target_id);
     register_entity(m);
+    ResourceRef r= load_sound_by_name("missile.wav");
+    Sound * s = get_sound(r);
+    if(s){
+        PlaySound(*s);
+    }
 }
