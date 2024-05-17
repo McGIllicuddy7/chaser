@@ -21,10 +21,10 @@ Player::Player(ResourceRef manager){
       if(IsKeyDown(KEY_D)){
           input.x +=x_speed;
       }
-      if(input.y>0 && disp_y>=10000){
+      if(input.y>0 && disp_y>=1000){
           input.y = -1;
       }
-      if(input.y<0 && disp_y<=-10000){
+      if(input.y<0 && disp_y<=-1000){
         input.y = 1;
       }
       if(input.x == 0){
@@ -46,27 +46,32 @@ Player::Player(ResourceRef manager){
       if(m_momentum.x<-x_speed){
         m_momentum.x = -x_speed;
       }
-      float dist = 400;
+      float dist = 200;
     Collision c = box_trace(this->get_location(),this->get_location()+m_momentum*dist*dt, m_collision, m_this_ref);
-    if(c.hit){
+    if(c.hit){ 
         Entity * e = get_entity(c.collided_with);
         if(e){
-          c.collided_with = m_this_ref;
-          e->on_collision(c);
+          if(!(c.collided_with == m_this_ref)){
+            c.collided_with = m_this_ref;
+            e->on_collision(c);
+            dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
+          }
         }
-        dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
     }
     set_location(get_location()+m_momentum*dist*dt);
     disp_y += get_location().y-old_loc.y;
     Vector2 new_loc = get_location();
     m_velocity = (new_loc-old_loc)/GetFrameTime();
     const int sz = 100;
-    if(IsKeyPressed(KEY_SPACE)){
+    if(IsKeyPressed(KEY_J)){
         fire_laser(get_location()+Vector2{5,-7}, Vector2{1,0}, m_this_ref);
         fire_laser(get_location()+Vector2{5,7}, Vector2{1,0}, m_this_ref);
     }
-    if(IsKeyPressed(KEY_Q)){
-      fire_railgun(get_location()+Vector2{5,-0}, Vector2{1,0}, m_this_ref);
+    if(IsKeyPressed(KEY_K)){
+        fire_railgun(get_location()+Vector2{5,-0}, Vector2{1,0}, m_this_ref);
+    }
+    if(IsKeyPressed(KEY_L)){
+        spawn_chaff(get_location()+Vector2{64,0},get_velocity()+Vector2{100,0}, m_this_ref);
     }
  }
  void Player::on_init(ResourceRef this_ref){
@@ -74,7 +79,7 @@ Player::Player(ResourceRef manager){
     set_location({0,0});
     m_collision.height = 32;
     m_collision.width = 48;
-    m_health = 2;
+    m_health = 4;
     disp_y = 0;
     m_texture = load_texture_by_name("friendly_ship_engines.png");
     set_entity_as_origin(this_ref,{200,0});

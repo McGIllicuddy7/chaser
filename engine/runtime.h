@@ -25,7 +25,7 @@ struct ColTree{
 };
 
 class Runtime {
-    static const int num_layers = 4;
+    static const int num_layers = 5;
     void * m_current_level = 0;
     size_t m_screen_height;
     size_t m_screen_width;

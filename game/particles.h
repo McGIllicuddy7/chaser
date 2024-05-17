@@ -11,3 +11,12 @@ class LaserBeam:public Entity{
     void on_tick();
     void on_render();
 };
+class Chaff:public Entity{
+    float remaining_life;
+    float temperature;
+public:
+    Chaff(Vector2 location, Vector2 velocity);
+    void on_tick();
+    void on_render();
+    void on_damage(float damage, ResourceRef damager);
+};

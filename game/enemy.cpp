@@ -16,16 +16,16 @@ Entity * Enemy::get_player(){
     return m->get_player();
 }
 Vector2 Enemy::calculate_input(){
-    Vector2 input = Vector2{.x =(float)(((double)(rand()%2-1))/3.0),.y =float((rand()%2)-1)};
+    Vector2 input = Vector2{.x =(float)(((double)(rand()%2-1))/3.0),.y =float((rand()%3)-1)};
     Entity * e =get_player();
     if(!e){
         return input;
     }
     Player * p = (Player *)e;
     float delta = (get_location().y-e->get_location().y);
-    if(delta>75 || (p->y_disp()>500 && fabs(delta)<200)){
+    if(delta>=50 || (p->y_disp()>500 && fabs(delta)<200)){
         input.y = -1;
-    } else if (delta<=-75|| (p->y_disp()<500 && fabs(delta)<200)){
+    } else if (delta<=-50|| (p->y_disp()<500 && fabs(delta)<200)){
         input.y = 1;
     }
     if(get_location().x<400){
@@ -42,7 +42,7 @@ void Enemy::handle_movement(){
     Vector2 input = calculate_input();
     Vector2 old_momentum = m_momentum;
     m_momentum = m_momentum+input*4*dt;
-    float dist = 300;
+    float dist = 50;
     Collision c0 = line_trace(this->get_location(),this->get_location()+m_momentum*dist, m_this_ref);
     if(c0.hit){
         if((m_momentum.y>0 && input.y> 0 )|| (m_momentum.y<0 && input.y<0)){
@@ -79,18 +79,31 @@ void Enemy::handle_firing(){
     if(shot_timer<=0){
         Collision c = line_trace(get_location()+Vector2{-32,0}, get_location()+Vector2{-1000,0},m_this_ref);
         if(!c.hit){
-            if(rand()%512 == 0){
-                fire_laser(get_location()+Vector2{-32,-5}, Vector2{-1,0}, m_this_ref);
-                fire_laser(get_location()+Vector2{-32,5}, Vector2{-1,0}, m_this_ref);
+            Player * p= (Player*)get_player();
+            if(!p){
+                return;
             }
-            return;
+            Vector2 to_player = p->get_location()-get_location();
+            to_player = Vector2Normalize(to_player);
+            float delta = Vector2DotProduct(to_player, Vector2{1,0});
+            if(delta>0.5){
+                if(reflex<=0){
+                    reflex = 0.2;
+                }
+                reflex -=GetFrameTime();
+                if(reflex<0){
+                    shot_timer = 0.1;
+                    fire_laser(get_location()+Vector2{-32,-5}, Vector2{-1,0}, m_this_ref);
+                    fire_laser(get_location()+Vector2{-32,5}, Vector2{-1,0}, m_this_ref);
+                }
+            }
         }
         Entity * e = get_entity(c.collided_with);
         if(e->get_id()  != 1){
             return;
         }
         if(reflex<=0){
-            reflex = 0.25;
+            reflex = 0.2;
         }
         reflex -= GetFrameTime();
         if(reflex<=0){

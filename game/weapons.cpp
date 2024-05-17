@@ -34,3 +34,7 @@ void fire_railgun(Vector2 start, Vector2 direction, ResourceRef ref){
     Bullet * b =new Bullet(start, dir*800, ref);
     register_entity(b);
 }
+void spawn_chaff(Vector2 location, Vector2 velocity,ResourceRef ref){
+    Chaff * c = new Chaff(location, velocity);
+    register_entity(c);
+}

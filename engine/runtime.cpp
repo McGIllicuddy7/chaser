@@ -125,6 +125,9 @@ void Runtime::frame_collision_set_up(){
         Entity * e = m_entities.get_unchecked(i);
         if (e){
             EntityBB g = e->get_bb();
+            if(g.box.height == 0 || g.box.width == 0){
+                continue;
+            }
             if(g.box.x<minx){
                 minx = g.box.x;
             }

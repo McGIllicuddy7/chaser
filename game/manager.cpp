@@ -9,6 +9,7 @@ Manager::Manager(void *runtime){
     end_screen = false;
     ship_count = 0;
     desired_ship_count = 2;
+    m_collision.width = 0;
 }
 void Manager::on_tick(){
     Entity * p = get_entity(player);
