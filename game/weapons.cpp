@@ -3,7 +3,7 @@
 #include "bullet.h"
 Collision fire_laser(Vector2 start, Vector2 direction, ResourceRef ref){
     Collision col = line_trace(start, start+direction*1000,ref);
-    Vector2 hit_loc = start+direction*1000;
+    Vector2 hit_loc = start+direction*10000;
     if(col.hit){
         hit_loc = col.location;
         Entity * e= get_entity(col.collided_with);
@@ -31,7 +31,7 @@ void fire_railgun(Vector2 start, Vector2 direction, ResourceRef ref){
     else{
         dir = {0,0};
     }
-    Bullet * b =new Bullet(start, dir*800, ref);
+    Bullet * b =new Bullet(start, dir*2400, ref);
     register_entity(b);
 }
 void spawn_chaff(Vector2 location, Vector2 velocity,ResourceRef ref){

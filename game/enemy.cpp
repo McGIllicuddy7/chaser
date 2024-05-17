@@ -76,8 +76,9 @@ void Enemy::handle_movement(){
     m_velocity = (new_loc-old_loc)/GetFrameTime();
 }
 void Enemy::handle_firing(){
+    const float shot_min = 0.33;
     if(shot_timer<=0){
-        Collision c = line_trace(get_location()+Vector2{-32,0}, get_location()+Vector2{-1000,0},m_this_ref);
+        Collision c = line_trace(get_location()+Vector2{-32,0}, get_location()+Vector2{-10000,0},m_this_ref);
         if(!c.hit){
             Player * p= (Player*)get_player();
             if(!p){
@@ -85,14 +86,14 @@ void Enemy::handle_firing(){
             }
             Vector2 to_player = p->get_location()-get_location();
             to_player = Vector2Normalize(to_player);
-            float delta = Vector2DotProduct(to_player, Vector2{1,0});
-            if(delta>0.5){
+            float delta = Vector2DotProduct(to_player, Vector2{-1,0});
+            if(delta>0.98){
                 if(reflex<=0){
                     reflex = 0.2;
                 }
                 reflex -=GetFrameTime();
                 if(reflex<0){
-                    shot_timer = 0.1;
+                    shot_timer = shot_min;
                     fire_laser(get_location()+Vector2{-32,-5}, Vector2{-1,0}, m_this_ref);
                     fire_laser(get_location()+Vector2{-32,5}, Vector2{-1,0}, m_this_ref);
                 }
@@ -107,7 +108,7 @@ void Enemy::handle_firing(){
         }
         reflex -= GetFrameTime();
         if(reflex<=0){
-            shot_timer = 0.1;
+            shot_timer = shot_min;
             fire_laser(get_location()+Vector2{-32,-5}, Vector2{-1,0}, m_this_ref);
             fire_laser(get_location()+Vector2{-32,5}, Vector2{-1,0}, m_this_ref);
         }

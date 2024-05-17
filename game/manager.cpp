@@ -20,7 +20,7 @@ void Manager::on_tick(){
                 Player * bert = new Player(m_this_ref);
                 player = register_entity(bert);
                 for(int i =0; i<desired_ship_count; i++){
-                    Enemy * e = new Enemy(m_this_ref, Vector2{(float)(500+rand()%140),(float)(rand()%screen_height()-screen_height()/2)});
+                    Enemy * e = new Enemy(m_this_ref, Vector2{(float)(500+rand()%280),(float)(rand()%screen_height()-screen_height()/2)});
                     ResourceRef r = register_entity(e);
                     ships.push_back(r);
                     ship_count++;
@@ -35,7 +35,7 @@ void Manager::on_tick(){
     } else{
         if(ship_count<desired_ship_count){
             if(rand()%64 == 0){
-                Enemy * e = new Enemy(m_this_ref, Vector2{(float)(500+rand()%140),(float)(rand()%screen_height()-screen_height()/2)});
+                Enemy * e = new Enemy(m_this_ref, Vector2{(float)(500+rand()%280),(float)(rand()%screen_height()-screen_height()/2)});
                 ResourceRef r = register_entity(e);
                 ships.push_back(r);
                 ship_count++;
@@ -75,10 +75,11 @@ void Manager::ship_destroyed(ResourceRef ship_ref){
 void Manager::on_render(){
     if(!started){
         if(!end_screen){
-            DrawText("Chaser", 260, 80, 128, RED);
-            DrawText("Press Enter to Start", 280,200, 32, WHITE);
+            DrawText("Chaser", 400, 80, 128, RED);
+            DrawText("Press Enter to Start", 520,200, 32, WHITE);
         } else{
-            DrawText("Game Over", 280,100, 64, WHITE); 
+            DrawText("Game Over",500,100, 64, WHITE); 
+            DrawText("Press Enter to Restart", 520, 200, 32,WHITE);
         }
     }
 }

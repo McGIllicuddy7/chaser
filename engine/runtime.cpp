@@ -17,7 +17,7 @@ Runtime::Runtime( int width,int height, const char * name){
     srand(time(0));
 }
 Runtime* Runtime:: New(){
-    Runtime * out =  new Runtime(640*1.5, 480*1.5, "hello sailor");
+    Runtime * out =  new Runtime(640*2, 480*2, "hello sailor");
     rt = out;
     return out;
 }
@@ -66,7 +66,7 @@ void Runtime::Render(){
             }
         } 
     }
-    DrawFPS(600,80);
+    DrawFPS(1200,40);
     EndDrawing();
 }
 void Runtime::Run(){
