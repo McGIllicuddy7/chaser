@@ -1,10 +1,9 @@
 #include "runtime.h"
+
 ResourceRef Runtime::load_texture_by_name(std::string texture){
     if(m_texture_table.contains(texture)){
-        printf("contains\n");
         return m_texture_table[texture];
     }
-    printf("failed to find\n");
     std::string name = "../resources/"+texture;
     Texture t = LoadTexture(name.c_str());
     if(!IsTextureReady(t)){

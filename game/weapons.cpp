@@ -25,7 +25,7 @@ Collision fire_laser(Vector2 start, Vector2 direction, ResourceRef ref){
 }
 void fire_railgun(Vector2 start, Vector2 direction, ResourceRef ref){
     Vector2 dir;
-    if(direction.x != 0 && direction.y !=0 ){
+    if(direction.x != 0 || direction.y !=0 ){
         dir= Vector2Normalize(direction);
     }
     else{

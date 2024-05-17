@@ -1,6 +1,5 @@
 #include "particles.h"
 #include "engine.h"
-int count = 0;
 LaserBeam::LaserBeam(Vector2 start, Vector2 end, ResourceRef Parent){
     m_start = start;
     Entity * p = get_entity(Parent);
@@ -10,7 +9,6 @@ LaserBeam::LaserBeam(Vector2 start, Vector2 end, ResourceRef Parent){
     m_end = end;
     timer = 0.1;
     m_parent = Parent;
-    printf("%d\n", count++);
 }
 void LaserBeam::on_tick(){
     timer -= GetFrameTime();

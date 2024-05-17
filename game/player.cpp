@@ -66,7 +66,7 @@ Player::Player(ResourceRef manager){
         fire_laser(get_location()+Vector2{5,7}, Vector2{1,0}, m_this_ref);
     }
     if(IsKeyPressed(KEY_Q)){
-      fire_railgun(get_location()+Vector2{5,-0}, Vector2{1000,0}+m_velocity, m_this_ref);
+      fire_railgun(get_location()+Vector2{5,-0}, Vector2{1,0}, m_this_ref);
     }
  }
  void Player::on_init(ResourceRef this_ref){
@@ -84,9 +84,6 @@ Player::Player(ResourceRef manager){
    if(tmp){
     DrawTextureV(*tmp, convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), WHITE);
    }
-   char buff[100] = {};
-   snprintf(buff, 99, "displacement %f", disp_y);
-   DrawText(buff, 600, 32, 16, WHITE);
   }
 
 void Player::on_destroy(){
