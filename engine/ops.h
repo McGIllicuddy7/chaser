@@ -16,5 +16,6 @@ inline Vector2 operator*(float b, Vector2 a){
 inline Vector2 operator/ (Vector2 a, float b){
     return Vector2Scale(a,1/b);
 }
+/*
 void * operator new(size_t size);
-void operator delete(void * ptr, unsigned long sz);
+void operator delete(void * ptr, unsigned long sz);*/
