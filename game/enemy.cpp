@@ -145,7 +145,11 @@ void Enemy::on_destroy(){
     if((void *)mn>(void *)4095){
         mn->ship_destroyed(m_this_ref);
     }
-
+    ResourceRef r= load_sound_by_name("ship_explosion.wav");
+    Sound * s = get_sound(r);
+    if(s){
+        PlaySound(*s);
+    }
 }
 size_t Enemy::get_id(){
     return 2;

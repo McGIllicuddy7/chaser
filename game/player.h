@@ -7,6 +7,11 @@ class Player:public Entity{
     Vector2 m_momentum;
     float disp_y;
     int m_health;
+    int missile_ammo;
+    int railgun_ammo;
+    int power;
+    float ammo_timer;
+    int chaff_ammo;
     public:
     Player(ResourceRef manager);
     void on_tick();

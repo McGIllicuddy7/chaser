@@ -7,3 +7,4 @@ raylib-master/*/Makefile
 raylib-master/CMakeFiles
 raylib-master/*.cmake
 raylib-master/raylib/*/*
+*.prof

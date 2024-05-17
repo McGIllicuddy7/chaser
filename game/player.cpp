@@ -1,11 +1,32 @@
  #include "player.h"
  #include "weapons.h"
+
 Player::Player(ResourceRef manager){
     m_manager = manager;
 }
  void Player::on_tick(){
       Vector2 old_loc = get_location();
       float dt = GetFrameTime();
+      ammo_timer += dt;
+      if(floor(ammo_timer-dt)<floor(ammo_timer)){
+        if((int)ammo_timer>0){
+            power += 20;
+            if(power>100){
+              power = 100;
+            }
+            if((int)ammo_timer%7 == 0){
+              railgun_ammo += 1;
+              if(railgun_ammo>5){
+                railgun_ammo = 5;
+              }
+            }
+        }
+        if(ammo_timer>21){
+          ammo_timer = 0;
+          chaff_ammo = 10;
+          missile_ammo = 1;
+        }
+      }
       Vector2 input = {-0.0,0};
       float y_speed = 1;
       float x_speed = 0.25;
@@ -63,18 +84,23 @@ Player::Player(ResourceRef manager){
     Vector2 new_loc = get_location();
     m_velocity = (new_loc-old_loc)/GetFrameTime();
     const int sz = 100;
-    if(IsKeyPressed(KEY_J)){
+    if(IsKeyPressed(KEY_J) && power>5){
         fire_laser(get_location()+Vector2{5,-7}, Vector2{1,0}, m_this_ref);
         fire_laser(get_location()+Vector2{5,7}, Vector2{1,0}, m_this_ref);
+        power -= 5;
     }
-    if(IsKeyPressed(KEY_K)){
+    if(IsKeyPressed(KEY_K)&& railgun_ammo>0 && power>25){
         fire_railgun(get_location()+Vector2{5,-0}, Vector2{1,0}, m_this_ref);
+        railgun_ammo -= 1;
+        power -=25;
     }
-    if(IsKeyPressed(KEY_L)){
+    if(IsKeyPressed(KEY_L) && chaff_ammo>0){
         spawn_chaff(get_location()+Vector2{64,0},get_velocity()+Vector2{100,0}, m_this_ref);
+        chaff_ammo--;
     }
-    if(IsKeyPressed(KEY_M)){
+    if(IsKeyPressed(KEY_M) && missile_ammo>0){
         fire_missile(get_location()+Vector2{64,0},get_velocity()+Vector2{100,(float)((rand()%2)*2-1)*300}, m_this_ref,2);
+        missile_ammo -= 1;
     }
  }
  void Player::on_init(ResourceRef this_ref){
@@ -84,15 +110,28 @@ Player::Player(ResourceRef manager){
     m_collision.width = 48;
     m_health = 4;
     disp_y = 0;
+    missile_ammo = 1;
+    railgun_ammo = 5;
+    power = 100;
+    chaff_ammo = 10;
     m_texture = load_texture_by_name("friendly_ship_engines.png");
     set_entity_as_origin(this_ref,{200,0});
  }
- void Player::on_render(){
-   Texture * tmp =get_texture(m_texture);
-   if(tmp){
+void Player::on_render(){
+  Texture * tmp =get_texture(m_texture);
+  if(tmp){
     DrawTextureV(*tmp, convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), WHITE);
-   }
   }
+  char buff[100] = {};
+  snprintf(buff, 99, "power %d%%", power);
+  DrawText(buff, 20, 40, 20, WHITE);
+  snprintf(buff, 99, "railgun shots: %d", railgun_ammo);
+  DrawText(buff, 20, 80, 20, WHITE);
+  snprintf(buff, 99, "missiles: %d", missile_ammo);
+  DrawText(buff, 20,120, 20, WHITE);
+  snprintf(buff, 99, "chaff shells: %d", chaff_ammo);
+  DrawText(buff, 20, 160, 20, WHITE);
+}
 
 void Player::on_destroy(){
   Manager * mn = (Manager*)get_entity(m_manager);
