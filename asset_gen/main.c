@@ -60,4 +60,5 @@ int main(void){
         UnloadImage(I);
         UnloadRenderTexture(r);
     }
+    CloseWindow();
 }
