@@ -10,6 +10,7 @@ LaserBeam::LaserBeam(Vector2 start, Vector2 end, ResourceRef Parent){
     timer = 0.1;
     m_parent = Parent;
     m_collision.width = 0;
+    m_collision.height = 0;
 }
 void LaserBeam::on_tick(){
     timer -= GetFrameTime();

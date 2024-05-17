@@ -73,6 +73,9 @@ Player::Player(ResourceRef manager){
     if(IsKeyPressed(KEY_L)){
         spawn_chaff(get_location()+Vector2{64,0},get_velocity()+Vector2{100,0}, m_this_ref);
     }
+    if(IsKeyPressed(KEY_M)){
+        fire_missile(get_location()+Vector2{64,0},get_velocity()+Vector2{100,(float)((rand()%2)*2-1)*300}, m_this_ref,2);
+    }
  }
  void Player::on_init(ResourceRef this_ref){
     m_this_ref = this_ref;

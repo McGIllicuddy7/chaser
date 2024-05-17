@@ -1,5 +1,6 @@
 #include "weapons.h"
 #include "particles.h"
+#include "missile.h"
 #include "bullet.h"
 Collision fire_laser(Vector2 start, Vector2 direction, ResourceRef ref){
     Collision col = line_trace(start, start+direction*1000,ref);
@@ -37,4 +38,8 @@ void fire_railgun(Vector2 start, Vector2 direction, ResourceRef ref){
 void spawn_chaff(Vector2 location, Vector2 velocity,ResourceRef ref){
     Chaff * c = new Chaff(location, velocity);
     register_entity(c);
+}
+void fire_missile(Vector2 location, Vector2 velocity, ResourceRef ref, size_t target_id){
+    Missile * m = new Missile(location, velocity, ref, target_id);
+    register_entity(m);
 }
