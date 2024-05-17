@@ -9,6 +9,9 @@
 class Entity;
 struct EntityBB;
 struct Collision;
+void cleanup(Entity * entity);
+void cleanup(Texture * texture);
+void cleanup(Sound * sound);
 struct ColTree{
     static const int stride =32;
     float xdiv;

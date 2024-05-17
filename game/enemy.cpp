@@ -128,7 +128,10 @@ void Enemy::on_damage(float damage, ResourceRef Other){
 }
 void Enemy::on_destroy(){
     Manager * mn = (Manager*)get_entity(m_manager);
-    mn->ship_destroyed(m_this_ref);
+    if((void *)mn>(void *)4095){
+        mn->ship_destroyed(m_this_ref);
+    }
+
 }
 size_t Enemy::get_id(){
     return 2;

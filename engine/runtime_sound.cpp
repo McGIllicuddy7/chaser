@@ -3,7 +3,7 @@ ResourceRef Runtime::load_sound_by_name(std::string sound){
     if(m_sound_table.contains(sound)){
         return m_sound_table[sound];
     }
-    std::string name = "../resources/"+sound;
+    std::string name = "resources/"+sound;
     Sound t = LoadSound(name.c_str());
     if(!IsSoundReady(t)){
         return ResourceRef();
@@ -25,5 +25,6 @@ void Runtime::unload_sound(std::string sound){
     m_sounds.remove(rf);
 }
 void cleanup(Sound * sound){
+    printf("unloaded sound");
     UnloadSound(*sound);
 }

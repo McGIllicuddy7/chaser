@@ -7,6 +7,7 @@
 extern void initscript(Runtime * runtime);
 Runtime * rt =0;
 Runtime::~Runtime(){
+    reset();
     CloseWindow();
 }
 Runtime::Runtime( int width,int height, const char * name){

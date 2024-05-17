@@ -12,18 +12,22 @@ struct ResourceRef{
     }
 };
 template <typename T >struct Resource{
-    std::unique_ptr<T> m_value;
+    T* m_value;
     size_t m_generation;
     void reset(){
-        m_value.release();
+        if(m_value){
+            cleanup(m_value);
+            delete m_value;
+        }
+        m_value = 0;
     }
     Resource(){
-        m_value.reset();
+        m_value = 0;
         m_generation = 0;
     }
     size_t emplace(T * value){
         reset();
-        m_value.reset(value);
+        m_value = value;
         return m_generation;
     }
     void remove(size_t generation){
@@ -33,10 +37,10 @@ template <typename T >struct Resource{
         if(generation != m_generation){
             return 0;
         }
-        return m_value.get();
+        return m_value;
     }
     T*get_unchecked(){
-        return m_value.get();
+        return m_value;
     }
     size_t generation(){
         return m_generation;

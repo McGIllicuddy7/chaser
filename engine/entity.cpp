@@ -41,3 +41,6 @@ uint8_t Entity::get_render_depth(){
 size_t Entity::get_id(){
    return 0;
 }
+Entity::~Entity(){
+   printf("deleted\n");
+}

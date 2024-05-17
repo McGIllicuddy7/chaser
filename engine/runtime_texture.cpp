@@ -1,9 +1,11 @@
 #include "runtime.h"
 ResourceRef Runtime::load_texture_by_name(std::string texture){
     if(m_texture_table.contains(texture)){
+        printf("contains\n");
         return m_texture_table[texture];
     }
-    std::string name = "../resources/"+texture;
+    printf("failed to find\n");
+    std::string name = "resources/"+texture;
     Texture t = LoadTexture(name.c_str());
     if(!IsTextureReady(t)){
         return ResourceRef();
@@ -25,5 +27,6 @@ void Runtime::unload_texture(std::string name){
     m_textures.remove(rf);
 }
 void cleanup(Texture * texture){
+    printf("unloaded texture\n");
     UnloadTexture(*texture);
 }

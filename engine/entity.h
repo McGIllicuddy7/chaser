@@ -5,7 +5,6 @@
 #include "runtime.h"
 #include "ops.h"
 class Runtime;
-void cleanup(Texture * texture);
 struct Collision{
     bool hit; 
     Vector2 location;
@@ -36,5 +35,5 @@ public:
     uint8_t get_render_depth();
     virtual void on_damage(float damage,ResourceRef other);
     virtual size_t get_id();
+    virtual ~Entity();
 };
-void cleanup(Entity * entity);
