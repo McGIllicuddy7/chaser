@@ -1,6 +1,6 @@
 #include "particles.h"
 #include "engine.h"
-#include "ent_ids.h"
+#include "entids.h"
 LaserBeam::LaserBeam(Vector2 start, Vector2 end, ResourceRef Parent){
     m_start = start;
     Entity * p = get_entity(Parent);

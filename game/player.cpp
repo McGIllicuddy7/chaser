@@ -1,6 +1,6 @@
  #include "player.h"
  #include "weapons.h"
-#include "ent_ids.h"
+#include "entids.h"
 Player::Player(ResourceRef manager){
     m_manager = manager;
 }

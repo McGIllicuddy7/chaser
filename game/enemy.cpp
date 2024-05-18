@@ -2,7 +2,7 @@
  #include "bullet.h"
  #include "weapons.h"
  #include "player.h"
- #include "ent_ids.h"
+ #include "entids.h"
 Enemy::Enemy(ResourceRef manager, Vector2 location){
     m_manager = manager;
     m_collision.x = location.x;

@@ -1,5 +1,5 @@
 #include "bullet.h" 
-#include "ent_ids.h"
+#include "entids.h"
 void Bullet::on_tick(){
     float dt = GetFrameTime();
     float dist = Vector2Length(m_velocity);
