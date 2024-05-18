@@ -1,4 +1,5 @@
 #include "bullet.h" 
+#include "ent_ids.h"
 void Bullet::on_tick(){
     float dt = GetFrameTime();
     float dist = Vector2Length(m_velocity);
@@ -6,12 +7,26 @@ void Bullet::on_tick(){
     if(c.hit){
         Entity * e = get_entity(c.collided_with);
         if(e && !(c.collided_with == m_firer)){
-            c.collided_with = m_this_ref;
-            e->on_damage(3,m_this_ref);
-            destroy_entity(m_this_ref);
-            dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
+            if((ent_id)e->get_id() != ent_id::particle){
+                c.collided_with = m_this_ref;
+                e->on_damage(3,m_this_ref);
+                destroy_entity(m_this_ref);
+                return;
+            }
         }
     } 
+    c = line_trace(this->get_location(),this->get_location()+m_velocity*dt, m_this_ref);
+    if(c.hit){
+        Entity * e = get_entity(c.collided_with);
+        if(e &&!(c.collided_with == m_firer)){
+          if((ent_id)e->get_id() != ent_id::particle){
+                c.collided_with = m_this_ref;
+                e->on_damage(3,m_this_ref);
+                destroy_entity(m_this_ref);
+                return;
+            }
+        }
+    }
     if(dist>0){
         Vector2 v = Vector2Normalize(m_velocity);
         m_collision.x += v.x*dist*dt;
@@ -28,7 +43,7 @@ void Bullet::on_init(ResourceRef this_ref){
 void Bullet::on_render(){
     Color c = PINK;
     c.a = 200;
-    int w = 8;
+    int w =2;
     DrawCircleV(convert_world_to_screen(Vector2{m_collision.x+m_collision.width/2, m_collision.y+m_collision.height/2}),w, c);
     c = WHITE;
     DrawRectangleV(convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), Vector2{m_collision.height, m_collision.width}, c);
@@ -39,8 +54,8 @@ void Bullet::on_destroy(){
 Bullet::Bullet(Vector2 location, Vector2 velocity, ResourceRef firer){
     m_collision.x = location.x-2;
     m_collision.y = location.y-2;
-    m_collision.height = 4;
-    m_collision.width = 4;
+    m_collision.height =1;
+    m_collision.width = 1;
     m_velocity = velocity;
     m_firer = firer;
     m_lf = 2;

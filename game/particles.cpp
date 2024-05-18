@@ -1,5 +1,6 @@
 #include "particles.h"
 #include "engine.h"
+#include "ent_ids.h"
 LaserBeam::LaserBeam(Vector2 start, Vector2 end, ResourceRef Parent){
     m_start = start;
     Entity * p = get_entity(Parent);
@@ -24,7 +25,9 @@ void LaserBeam::on_render(){
         DrawLineEx(convert_world_to_screen(p->get_location()+m_start),convert_world_to_screen(m_end), 1, {255, 150,150,255});
     }
 }
-
+size_t LaserBeam::get_id(){
+    return (size_t)(ent_id::particle); 
+}
 Chaff::Chaff(Vector2 location, Vector2 velocity){
     m_collision = {0,0, 40, 40};
     set_location(location);
@@ -51,4 +54,7 @@ void Chaff::on_render(){
 }
 void Chaff::on_damage(float damage, ResourceRef damager){
 
+}
+size_t Chaff::get_id(){
+    return (size_t)(ent_id::particle);
 }

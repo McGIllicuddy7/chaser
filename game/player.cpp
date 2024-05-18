@@ -1,6 +1,6 @@
  #include "player.h"
  #include "weapons.h"
-
+#include "ent_ids.h"
 Player::Player(ResourceRef manager){
     m_manager = manager;
 }
@@ -25,6 +25,10 @@ Player::Player(ResourceRef manager){
           ammo_timer = 0;
           chaff_ammo = 10;
           missile_ammo = 1;
+          m_health += 1;
+          if(m_health>4){
+            m_health = 4;
+          }
         }
       }
       Vector2 input = {-0.0,0};
@@ -99,7 +103,7 @@ Player::Player(ResourceRef manager){
         chaff_ammo--;
     }
     if(IsKeyPressed(KEY_M) && missile_ammo>0){
-        fire_missile(get_location()+Vector2{64,0},get_velocity()+Vector2{100,(float)((rand()%2)*2-1)*300}, m_this_ref,2);
+        fire_missile(get_location()+Vector2{64,0},get_velocity()+Vector2{100,(float)((rand()%2)*2-1)*300}, m_this_ref,(size_t)(ent_id::enemy));
         missile_ammo -= 1;
     }
  }
@@ -123,14 +127,16 @@ void Player::on_render(){
     DrawTextureV(*tmp, convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), WHITE);
   }
   char buff[100] = {};
-  snprintf(buff, 99, "power %d%%", power);
+  snprintf(buff, 99, "health %d", m_health);
   DrawText(buff, 20, 40, 20, WHITE);
-  snprintf(buff, 99, "railgun shots: %d", railgun_ammo);
+  snprintf(buff, 99, "power %d%%", power);
   DrawText(buff, 20, 80, 20, WHITE);
-  snprintf(buff, 99, "missiles: %d", missile_ammo);
+  snprintf(buff, 99, "railgun shots: %d", railgun_ammo);
   DrawText(buff, 20,120, 20, WHITE);
+  snprintf(buff, 99, "missiles: %d", missile_ammo);
+  DrawText(buff, 20,160, 20, WHITE);
   snprintf(buff, 99, "chaff shells: %d", chaff_ammo);
-  DrawText(buff, 20, 160, 20, WHITE);
+  DrawText(buff, 20, 200, 20, WHITE);
 }
 
 void Player::on_destroy(){
@@ -150,7 +156,7 @@ void Player::on_damage(float damage, ResourceRef other){
     }
 }
 size_t Player::get_id(){
-  return 1;
+  return (size_t)(ent_id::player);
 }
 float Player::y_disp(){
   return disp_y;

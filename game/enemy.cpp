@@ -2,6 +2,7 @@
  #include "bullet.h"
  #include "weapons.h"
  #include "player.h"
+ #include "ent_ids.h"
 Enemy::Enemy(ResourceRef manager, Vector2 location){
     m_manager = manager;
     m_collision.x = location.x;
@@ -66,17 +67,19 @@ void Enemy::handle_movement(){
     if(c.hit){
         Entity * e = get_entity(c.collided_with);
         if(e){
-            c.collided_with = m_this_ref;
-            e->on_collision(c);
+            if((ent_id)e->get_id()!= ent_id::particle){
+                c.collided_with = m_this_ref;
+                e->on_collision(c);
+                dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
+            }
         }
-        dist = Vector2Distance(Vector2{m_collision.x, m_collision.y}, c.location);
     }
     set_location(get_location()+m_momentum*dist*dt);
     Vector2 new_loc = get_location();
     m_velocity = (new_loc-old_loc)/GetFrameTime();
 }
 void Enemy::handle_firing(){
-    const float shot_min = 0.33;
+    const float shot_min = 0.8;
     if(shot_timer<=0){
         Collision c = line_trace(get_location()+Vector2{-32,0}, get_location()+Vector2{-10000,0},m_this_ref);
         if(!c.hit){
@@ -87,7 +90,7 @@ void Enemy::handle_firing(){
             Vector2 to_player = p->get_location()-get_location();
             to_player = Vector2Normalize(to_player);
             float delta = Vector2DotProduct(to_player, Vector2{-1,0});
-            if(delta>0.98){
+            if(delta>0.9){
                 if(reflex<=0){
                     reflex = 0.2;
                 }
@@ -137,7 +140,6 @@ void Enemy::on_damage(float damage, ResourceRef Other){
     m_health -= damage;
     if(m_health<=0){
         destroy_entity(m_this_ref);
-        on_destroy();
     }
 }
 void Enemy::on_destroy(){
@@ -152,5 +154,5 @@ void Enemy::on_destroy(){
     }
 }
 size_t Enemy::get_id(){
-    return 2;
+    return (size_t)(ent_id::enemy);
 }

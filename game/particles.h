@@ -10,6 +10,7 @@ class LaserBeam:public Entity{
     LaserBeam(Vector2 start, Vector2 end, ResourceRef Parent);
     void on_tick();
     void on_render();
+    size_t get_id();
 };
 class Chaff:public Entity{
     float remaining_life;
@@ -19,4 +20,5 @@ public:
     void on_tick();
     void on_render();
     void on_damage(float damage, ResourceRef damager);
+    size_t get_id();
 };
