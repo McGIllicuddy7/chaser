@@ -24,9 +24,9 @@ Vector2 Enemy::calculate_input(){
     }
     Player * p = (Player *)e;
     float delta = (get_location().y-e->get_location().y);
-    if(delta>=50 || (p->y_disp()>500 && fabs(delta)<200)){
+    if(delta>=100 || (p->y_disp()>500 && fabs(delta)<200)){
         input.y = -1;
-    } else if (delta<=-50|| (p->y_disp()<500 && fabs(delta)<200)){
+    } else if (delta<=100|| (p->y_disp()<500 && fabs(delta)<200)){
         input.y = 1;
     }
     if(get_location().x<400){

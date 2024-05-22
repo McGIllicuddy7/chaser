@@ -26,6 +26,6 @@ void Runtime::unload_texture(std::string name){
     m_textures.remove(rf);
 }
 void cleanup(Texture * texture){
-    printf("unloaded texture\n");
+    //printf("unloaded texture\n");
     UnloadTexture(*texture);
 }

@@ -25,6 +25,6 @@ void Runtime::unload_sound(std::string sound){
     m_sounds.remove(rf);
 }
 void cleanup(Sound * sound){
-    printf("unloaded sound");
+    //printf("unloaded sound");
     UnloadSound(*sound);
 }
