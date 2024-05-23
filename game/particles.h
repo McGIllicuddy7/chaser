@@ -22,3 +22,12 @@ public:
     void on_damage(float damage, ResourceRef damager);
     size_t get_id();
 };
+class ShipExplosion:public Entity{
+    float time;
+    ResourceRef frames[13];
+    public:
+    ShipExplosion(Vector2 location);
+    void on_tick();
+    void on_render();
+    size_t get_id(); 
+};

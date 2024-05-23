@@ -62,9 +62,6 @@ void generate_engines(Color col){
     DrawOval((Vector2){2,16-0.5},2,2, col);
     DrawOval((Vector2){2,32.0-8.0+3.5},2,2, col); 
 }
-void generate_image(const char * name,void(*draw)(Color), Color col, bool flipped){
-
-}
 RenderTexture render_texture;
 void begin_image(){
     render_texture = LoadRenderTexture(width, height);
@@ -77,7 +74,9 @@ void end_image(const char * name, bool flipped){
     if(flipped){
         ImageFlipHorizontal(&I);
     }
-    ExportImage(I, name);
+    char * name_actual = string_format("output/%s",name);
+    ExportImage(I, name_actual);
+    destroy(name_actual);
     UnloadImage(I);
     UnloadRenderTexture(render_texture);
 }
