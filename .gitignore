@@ -9,3 +9,4 @@ raylib-master/*.cmake
 raylib-master/raylib/*/*
 *.prof
 high_score
+chaser

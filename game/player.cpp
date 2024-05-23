@@ -71,7 +71,7 @@ Player::Player(ResourceRef manager){
       if(m_momentum.x<-x_speed){
         m_momentum.x = -x_speed;
       }
-      float dist = 200;
+      float dist = 150;
     Collision c = box_trace(this->get_location(),this->get_location()+m_momentum*dist*dt, m_collision, m_this_ref);
     if(c.hit){ 
         Entity * e = get_entity(c.collided_with);
@@ -112,7 +112,7 @@ Player::Player(ResourceRef manager){
     set_location({0,0});
     m_collision.height = 32;
     m_collision.width = 48;
-    m_health = 2;
+    m_health = 4;
     disp_y = 0;
     missile_ammo = 1;
     railgun_ammo = 5;

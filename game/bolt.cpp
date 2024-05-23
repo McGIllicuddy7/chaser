@@ -7,7 +7,7 @@ void Bolt::on_tick(){
     if(c.hit){
         Entity * e = get_entity(c.collided_with);
         if(e && !(c.collided_with == m_firer)){
-            if((ent_id)e->get_id() != ent_id::particle){
+            if(true){
                 c.collided_with = m_this_ref;
                 e->on_damage(3,m_this_ref);
                 destroy_entity(m_this_ref);
@@ -60,6 +60,6 @@ Bolt::Bolt(Vector2 location, Vector2 velocity, ResourceRef firer){
     m_collision.width = 25;
     m_velocity = velocity;
     m_firer = firer;
-    m_lf = 2;
+    m_lf = 1;
     m_depth = 3;
 }

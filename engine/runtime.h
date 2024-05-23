@@ -13,7 +13,7 @@ void cleanup(Entity * entity);
 void cleanup(Texture * texture);
 void cleanup(Sound * sound);
 struct ColTree{
-    static const int stride =32;
+    static const int stride =64;
     float xdiv;
     float ydiv;
     std::vector<EntityBB>m_area[stride*stride];

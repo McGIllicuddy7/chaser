@@ -44,7 +44,7 @@ void Enemy::handle_movement(){
     Vector2 input = calculate_input();
     Vector2 old_momentum = m_momentum;
     m_momentum = m_momentum+input*4*dt;
-    float dist = 50;
+    float dist = 150;
     Collision c0 = line_trace(this->get_location(),this->get_location()+m_momentum*dist, m_this_ref);
     if(c0.hit){
         if((m_momentum.y>0 && input.y> 0 )|| (m_momentum.y<0 && input.y<0)){
@@ -91,9 +91,9 @@ void Enemy::handle_firing(){
             Vector2 to_player = p->get_location()-get_location();
             to_player = Vector2Normalize(to_player);
             float delta = Vector2DotProduct(to_player, Vector2{-1,0});
-            if(delta>0.9){
+            if(delta>0.95){
                 if(reflex<=0){
-                    reflex = 0.2;
+                    reflex = 0.25;
                 }
                 reflex -=GetFrameTime();
                 if(reflex<0){
@@ -108,7 +108,7 @@ void Enemy::handle_firing(){
             return;
         }
         if(reflex<=0){
-            reflex = 0.2;
+            reflex = 0.25;
         }
         reflex -= GetFrameTime();
         if(reflex<=0){

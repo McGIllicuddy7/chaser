@@ -61,12 +61,12 @@ void Manager::on_init( ResourceRef this_ref){
     ships.clear();
     m_score = 0;
     ((Runtime * )(m_runtime))->set_background_color(Color{ 100/4, 122/8, 127/4, 255 });
-    FILE * f = fopen("../resources/high_score", "rb");
+    FILE * f = fopen("resources/high_score", "rb");
     if(f){
         fread(&m_high_score,sizeof(size_t),1 ,f);
         fclose(f);
     } else{
-        f = fopen("../resources/high_score", "wb");
+        f = fopen("resources/high_score", "wb");
         if(f){
             size_t s = 0;
             fwrite(&s, sizeof(s), 1, f);
@@ -81,7 +81,7 @@ void Manager::player_destroyed(){
         started = false;
         end_screen = true;
         if(m_score>m_high_score){
-            FILE*f = fopen("../resources/high_score", "wb");
+            FILE*f = fopen("resources/high_score", "wb");
             if(f){
                 fwrite(&m_score, sizeof(m_score), 1, f);
                 fclose(f);

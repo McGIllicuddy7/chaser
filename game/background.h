@@ -2,6 +2,7 @@
 #include "raylib/raylib.h"
 #include "engine.h"
 class Building:public Entity{
+    bool passed;
     float m_height;
 public:
     Building(Vector2 location,float height);

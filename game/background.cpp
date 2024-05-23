@@ -8,11 +8,23 @@ Building::Building(Vector2 location, float height){
     m_height = height;
     m_depth = 1;
     m_velocity = {50, 0};
+    passed = false;
 }
 void Building::on_tick(){
     m_collision.x += m_velocity.x;
     if(m_collision.x>5000){
         destroy_entity(m_this_ref);
+    } else if(!passed){
+        if(m_collision.x <-300){
+            ResourceRef ref = load_sound_by_name("buildingPass.wav");
+            Sound * s = get_sound(ref);
+            if(m_collision.y>-300){
+                if(s){
+                    passed = true;
+                    PlaySound(*s);
+                }
+            }
+        }
     }
 }
 void Building::on_render(){

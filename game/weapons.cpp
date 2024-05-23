@@ -62,7 +62,12 @@ void fire_blaster(Vector2 start, Vector2 direction, ResourceRef ref){
     else{
         dir = {0,0};
     }
-    Bolt * b =new Bolt(start, dir*3000, ref);
+    Entity * e = get_entity(ref);
+    Vector2 vel = {};
+    if(e){
+        vel = e->get_velocity();
+    }
+    Bolt * b =new Bolt(start, dir*850+vel, ref);
     register_entity(b);
     ResourceRef r= load_sound_by_name("laserShoot.wav");
     Sound * s = get_sound(r);

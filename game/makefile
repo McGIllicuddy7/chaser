@@ -7,4 +7,4 @@ LFLAGS = -lm -framework CoreVideo -framework IOKit -framework Cocoa -framework G
 endif
 
 make: bolt.cpp background.cpp manager.cpp bullet.cpp enemy.cpp init_script.cpp player.cpp weapons.cpp particles.cpp missile.cpp ../engine/engine.a 
-	g++ bolt.cpp background.cpp manager.cpp bullet.cpp enemy.cpp init_script.cpp player.cpp weapons.cpp particles.cpp missile.cpp ../engine/engine.a ../raylib-master/raylib/libraylib.a $(LFLAGS) -G3 -std=c++20 -fsanitize=address 
+	g++ bolt.cpp background.cpp manager.cpp bullet.cpp enemy.cpp init_script.cpp player.cpp weapons.cpp particles.cpp missile.cpp ../engine/engine.a ../raylib-master/raylib/libraylib.a $(LFLAGS) -O3 -std=c++20 -o chaser
