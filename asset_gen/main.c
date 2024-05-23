@@ -4,8 +4,8 @@
 #include "utils.h"
 #include "noise.h"
 #include <math.h>
-const int height = 50;
-const int width = 50;
+const int height = 100;
+const int width = 100;
 void DrawOval(Vector2 location, float rv, float rh, Color col){
     for(int y =0; y<height; y++){
         for(int x = 0; x<width; x++){
@@ -86,11 +86,11 @@ int main(void){
     InitWindow(width, height, "generation");
     int r = 100;
     for(int i =1; i<14; i++){
-        String name = string_format("explosion%d.png", i);
+        String name = string_format("ship_explosion%d.png", i);
         begin_image();
-        double theta = (((double)(i*2))*PI)/20;
-        DrawNoisedOval((Vector2){25, 25}, 10, 50*(float)i/14, 10, 50*(float)i/14,(Color){0,0,0, 255-i*8}, r);
-        DrawNoisedOval((Vector2){25, 25,},0, 40*sin(theta), 0, 40*sin(theta), (Color){255,0,0, 255-i*8}, r);
+        double theta = (((double)(i*2))*PI)/30;
+        DrawNoisedOval((Vector2){50, 50}, 10, 200*(float)i/14, 10, 200*(float)i/14,(Color){50,50,50, 255-i*8}, r);
+        DrawNoisedOval((Vector2){50, 50},0, 150*sin(theta), 0, 150*sin(theta), (Color){255,32,0, 255-i*8}, r);
         end_image(name, 1);
         destroy(name);
     }

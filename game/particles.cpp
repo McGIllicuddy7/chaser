@@ -58,11 +58,12 @@ void Chaff::on_damage(float damage, ResourceRef damager){
 size_t Chaff::get_id(){
     return (size_t)(ent_id::particle);
 }
-ShipExplosion::ShipExplosion(Vector2 location){
+ShipExplosion::ShipExplosion(Vector2 location, Vector2 velocity){
     m_collision.height = 0;
     m_collision.width = 0;
     m_collision.x = location.x;
     m_collision.y = location.y;
+    m_velocity = velocity;
     time = 0;
     frames[0] = load_texture_by_name("explosion/explosion1.png");
     frames[1] = load_texture_by_name("explosion/explosion2.png");
@@ -83,6 +84,7 @@ void ShipExplosion::on_tick(){
     if(time >0.5){
         destroy_entity(m_this_ref);
     }
+    set_location(get_location()+m_velocity*GetFrameTime());
 }
 void ShipExplosion::on_render(){
     int idx = round((time)*6.5);
@@ -91,6 +93,6 @@ void ShipExplosion::on_render(){
     Texture * texture = get_texture(frames[idx]);
     DrawTextureV(*texture, convert_world_to_screen(Vector2{m_collision.x-25, m_collision.y-25}), WHITE);
 }
-size_t get_id(){
+size_t ShipExplosion::get_id(){
     return (size_t)(ent_id::particle); 
 }

@@ -3,6 +3,7 @@
  #include "weapons.h"
  #include "player.h"
  #include "entids.h"
+ #include "particles.h"
 Enemy::Enemy(ResourceRef manager, Vector2 location){
     m_manager = manager;
     m_collision.x = location.x;
@@ -152,6 +153,8 @@ void Enemy::on_destroy(){
     if(s){
         PlaySound(*s);
     }
+    ShipExplosion * ex = new ShipExplosion(get_location(), m_velocity);
+    register_entity(ex);
 }
 size_t Enemy::get_id(){
     return (size_t)(ent_id::enemy);
