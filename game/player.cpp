@@ -112,7 +112,7 @@ Player::Player(ResourceRef manager){
     set_location({0,0});
     m_collision.height = 32;
     m_collision.width = 48;
-    m_health = 4;
+    m_health = 2;
     disp_y = 0;
     missile_ammo = 1;
     railgun_ammo = 5;

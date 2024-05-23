@@ -16,7 +16,7 @@ void Building::on_tick(){
     }
 }
 void Building::on_render(){
-    DrawRectangleV(convert_world_to_screen(Vector2{m_collision.x, m_collision.y+m_height}), (Vector2){50,m_collision.height+m_height*2},WHITE);
+    DrawRectangleV(convert_world_to_screen(Vector2{m_collision.x, m_collision.y+m_height}), (Vector2){200,m_collision.height+m_height*2},WHITE);
 }
 size_t Building::get_id(){
     return (size_t)ent_id::background;
@@ -28,7 +28,7 @@ Star::Star(Vector2 location, float radius){
     m_collision.width = 0;
     m_radius = radius;
     m_depth = 0;
-    m_velocity = {50, 0};
+    m_velocity = {25, 0};
 }
 void Star::on_tick(){
     m_collision.x += m_velocity.x;

@@ -7,8 +7,11 @@ class Manager:public Entity{
     void * m_runtime;
     int ship_count;
     int desired_ship_count;
+    bool m_new_high_score;
     ResourceRef player;
     std::vector<ResourceRef> ships;
+    size_t m_score;
+    size_t m_high_score;
     public:
     Manager(void *runtime);
     void on_tick();

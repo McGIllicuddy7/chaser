@@ -145,7 +145,7 @@ void Enemy::on_damage(float damage, ResourceRef Other){
 }
 void Enemy::on_destroy(){
     Manager * mn = (Manager*)get_entity(m_manager);
-    if((void *)mn>(void *)4095){
+    if(mn){
         mn->ship_destroyed(m_this_ref);
     }
     ResourceRef r= load_sound_by_name("ship_explosion.wav");

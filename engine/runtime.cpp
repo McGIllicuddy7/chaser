@@ -57,7 +57,7 @@ void Runtime::Tick(){
 }
 void Runtime::Render(){
     BeginDrawing();
-    ClearBackground(BLACK);
+    ClearBackground(m_background_color);
     for(int j = 0; j<num_layers; j++){
         for(int i =0; i<m_to_draw[j].size(); i++){
             Entity * e = get_entity(m_to_draw[j][i]);
@@ -74,6 +74,7 @@ void Runtime::Run(){
     InitWindow(m_screen_width, m_screen_height, m_name.c_str());
     SetTargetFPS(60);
     InitAudioDevice();
+    m_background_color = BLACK;
     restart:
     initscript(this);
     while(!WindowShouldClose()){
@@ -101,7 +102,10 @@ ResourceRef Runtime::register_entity(Entity *e){
     return handle;
 }
 Entity * Runtime::get_entity(ResourceRef ref){
-    return this->m_entities.get(ref);
+    if(this->m_entities.cache_size()>0){
+        return this->m_entities.get(ref);
+    }
+    return 0;
 }
 void Runtime::set_entity_as_origin(ResourceRef ref, Vector2 Offset){
     m_origin_entity = ref;
@@ -246,4 +250,7 @@ void Runtime::clear_all_but(std::vector<ResourceRef> r){
             this->destroy_entity(ResourceRef{.idx = (size_t)i, .generation = (size_t)(m_entities.get_generation(i))});
         }
     }
+}
+void Runtime::set_background_color(Color col){
+    m_background_color = col;
 }

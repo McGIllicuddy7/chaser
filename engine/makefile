@@ -1,4 +1,4 @@
 make: coltree.cpp entity.cpp runtime_texture.cpp runtime.cpp main.cpp level_loader.cpp runtime_sound.cpp
-	g++ -c coltree.cpp entity.cpp runtime_texture.cpp runtime.cpp main.cpp level_loader.cpp runtime_sound.cpp -std=c++20 -O3
+	g++ -c coltree.cpp entity.cpp runtime_texture.cpp runtime.cpp main.cpp level_loader.cpp runtime_sound.cpp -std=c++20 -g3 -fsanitize=address
 	ar rcs engine.a coltree.o entity.o runtime.o runtime_texture.o main.o level_loader.o runtime_sound.o
 	rm *.o

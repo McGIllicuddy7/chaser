@@ -43,6 +43,7 @@ class Runtime {
     std::map<std::string, ResourceRef> m_sound_table;
     std::vector<ResourceRef> m_to_draw[num_layers];
     std::vector<ResourceRef> m_entity_destroy_queue;
+    Color m_background_color;
     protected:
     void Tick();
     void set_relative_locations();
@@ -74,4 +75,5 @@ class Runtime {
     ResourceRef load_sound_by_name(std::string sound);
     Sound * get_sound(ResourceRef ref);
     void unload_sound(std::string sound);
+    void set_background_color(Color color);
 };
