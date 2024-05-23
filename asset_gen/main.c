@@ -22,8 +22,7 @@ void DrawOval(Vector2 location, float rv, float rh, Color col){
         }   
     }
 }
-void DrawNoisedOval(Vector2 location, float rvmin, float rvmax, float rhmin, float rhmax, Color col){
-    int r = rand();
+void DrawNoisedOval(Vector2 location, float rvmin, float rvmax, float rhmin, float rhmax, Color col, int r){
        for(int y =0; y<height; y++){
         for(int x = 0; x<width; x++){
             Vector2 loc = {x,y};
@@ -63,29 +62,39 @@ void generate_engines(Color col){
     DrawOval((Vector2){2,16-0.5},2,2, col);
     DrawOval((Vector2){2,32.0-8.0+3.5},2,2, col); 
 }
-void draw(Color col){
-    DrawNoisedOval((Vector2){25,25}, 1,25, 1,25, RED);
-    //generate_engines(BLUE);
+void generate_image(const char * name,void(*draw)(Color), Color col, bool flipped){
+
+}
+RenderTexture render_texture;
+void begin_image(){
+    render_texture = LoadRenderTexture(width, height);
+    BeginTextureMode(render_texture);
+    ClearBackground((Color){0,0,0,0});
+}
+void end_image(const char * name, bool flipped){
+    EndTextureMode();
+    Image I = LoadImageFromTexture(render_texture.texture);
+    if(flipped){
+        ImageFlipHorizontal(&I);
+    }
+    ExportImage(I, name);
+    UnloadImage(I);
+    UnloadRenderTexture(render_texture);
 }
 int main(void){
-    const char * name = "test0.png";
-    bool flipped = 1;
     Color col = DARKBLUE;
-    SetTraceLogLevel(LOG_ERROR);
+    SetTraceLogLevel(LOG_ERROR); 
     InitWindow(width, height, "generation");
-    {
-        RenderTexture r = LoadRenderTexture(width, height);
-        BeginTextureMode(r);
-        ClearBackground((Color){0,0,0,0});
-        draw(col);
-        EndTextureMode();
-        Image I = LoadImageFromTexture(r.texture);
-        if(flipped){
-           ImageFlipHorizontal(&I);
-        }
-        ExportImage(I, name);
-        UnloadImage(I);
-        UnloadRenderTexture(r);
+    int r = 100;
+    for(int i =1; i<14; i++){
+        String name = string_format("explosion%d.png", i);
+        begin_image();
+        double theta = (((double)(i*2))*PI)/20;
+        DrawNoisedOval((Vector2){25, 25}, 10, 50*(float)i/14, 10, 50*(float)i/14,(Color){0,0,0, 255-i*8}, r);
+        DrawNoisedOval((Vector2){25, 25,},0, 40*sin(theta), 0, 40*sin(theta), (Color){255,0,0, 255-i*8}, r);
+        end_image(name, 1);
+        destroy(name);
     }
+
     CloseWindow();
 }
