@@ -24,7 +24,7 @@ public:
 };
 class ShipExplosion:public Entity{
     float time;
-    ResourceRef frames[13];
+    ResourceRef frames[14];
     public:
     ShipExplosion(Vector2 location, Vector2 velocity);
     void on_tick();

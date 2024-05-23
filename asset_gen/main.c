@@ -80,20 +80,49 @@ void end_image(const char * name, bool flipped){
     UnloadImage(I);
     UnloadRenderTexture(render_texture);
 }
+void generate_ship_explosions(){
+    int r = 100;
+    int amnt = 15;
+    for(int i =1; i<amnt; i++){
+        String name = string_format("ship_explosion%d.png", i);
+        begin_image();
+        double theta = (((double)(i*2))*PI)/35;
+        DrawNoisedOval((Vector2){50, 50}, 10, 50*(float)i/amnt+50, 10, 50*(float)i/amnt+50,(Color){50,50,50, 255-i*4}, r);
+        DrawNoisedOval((Vector2){50, 50},0, 40*sin(theta)+40, 0, 40*sin(theta)+40, (Color){255,32,0, 255-i*4}, r);
+        end_image(name, 1);
+        destroy(name);
+    }
+}
+void generate_fog(){ 
+    const char * name = "fog.png";
+    begin_image();
+    for(int x = 0; x<100; x++){
+        for(int y = 0; y<100; y++){
+            Vector2 loc = {x,y};
+            float dx = loc.x-50;
+            float dy = loc.y-50;
+            Vector2 v = {dx, dy};
+            v = Vector2Normalize(v);
+            double theta = Vector2Angle(v, (Vector2){1,0});
+            double noise = noise1d(100, theta*1000, 4);
+            dx *= dx;
+            dy *= dy;
+            float rx =Lerp(20,70, noise);
+            float ry =Lerp(20, 70, noise);
+            dx /= rx*rx;
+            dy /= ry*ry;
+            if((dx+dy)<1){
+                double n = noise2d(100, (double)x*10,(double) y*10, 5);
+                DrawPixel(x,y, (Color){n*255, n*255, n*255,n*125+125});
+            } 
+        }
+    }
+    end_image(name, 1);
+}
 int main(void){
     Color col = DARKBLUE;
     SetTraceLogLevel(LOG_ERROR); 
     InitWindow(width, height, "generation");
-    int r = 100;
-    for(int i =1; i<14; i++){
-        String name = string_format("ship_explosion%d.png", i);
-        begin_image();
-        double theta = (((double)(i*2))*PI)/30;
-        DrawNoisedOval((Vector2){50, 50}, 10, 200*(float)i/14, 10, 200*(float)i/14,(Color){50,50,50, 255-i*8}, r);
-        DrawNoisedOval((Vector2){50, 50},0, 150*sin(theta), 0, 150*sin(theta), (Color){255,32,0, 255-i*8}, r);
-        end_image(name, 1);
-        destroy(name);
-    }
-
+    generate_fog();
     CloseWindow();
 }

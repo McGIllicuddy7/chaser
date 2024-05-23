@@ -3,6 +3,7 @@
 #include "player.h"
 #include "bullet.h"
 #include "enemy.h"
+#include "background.h"
 Manager::Manager(void *runtime){
     m_runtime = runtime;
     started = false;
@@ -40,6 +41,15 @@ void Manager::on_tick(){
                 ships.push_back(r);
                 ship_count++;
             }
+        }
+        if(rand()%60 == 0){
+            Player * p = (Player *)get_entity(player);
+            Building * e = new Building({-1000,-p->y_disp()}, (rand()%1600)-800);
+            register_entity(e);
+        }
+        if(rand()%2 == 0){
+            Star * s = new Star((Vector2){-1000, (float)(rand()%2000-1000)}, rand()%2+rand()%2);
+            register_entity(s);
         }
     }
 

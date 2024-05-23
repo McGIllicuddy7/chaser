@@ -6,4 +6,5 @@ enum class ent_id:size_t{
     player = 1,
     enemy = 2,
     particle = 3,
+    background = 4,
 };

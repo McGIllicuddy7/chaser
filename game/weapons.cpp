@@ -32,7 +32,7 @@ void fire_railgun(Vector2 start, Vector2 direction, ResourceRef ref){
     else{
         dir = {0,0};
     }
-    Bullet * b =new Bullet(start, dir*2400, ref);
+    Bullet * b =new Bullet(start, dir*3000, ref);
     register_entity(b);
     ResourceRef r= load_sound_by_name("railgun.wav");
     Sound * s = get_sound(r);

@@ -48,8 +48,11 @@ void Chaff::on_tick(){
     m_collision.width += 10*dt;
 }
 void Chaff::on_render(){
-    DrawRectangleV(convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), {m_collision.width, m_collision.height}, {255, 255, 255,(unsigned char)Lerp(0,255, (remaining_life/10)*(remaining_life/10))});
-    
+    //DrawRectangleV(convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), {m_collision.width, m_collision.height}, {255, 255, 255,(unsigned char)Lerp(0,255, (remaining_life/10)*(remaining_life/10))});
+    ResourceRef r = load_texture_by_name("fog.png");
+    Texture * tex = get_texture(r);
+    float scale = m_collision.width/40;
+    DrawTextureEx(*tex,convert_world_to_screen(Vector2{m_collision.x-20*scale, m_collision.y-20*scale}),0,scale, {255, 255, 255,(unsigned char)Lerp(0,255, (remaining_life/10)*(remaining_life/10))});
 
 }
 void Chaff::on_damage(float damage, ResourceRef damager){
@@ -59,25 +62,27 @@ size_t Chaff::get_id(){
     return (size_t)(ent_id::particle);
 }
 ShipExplosion::ShipExplosion(Vector2 location, Vector2 velocity){
+    m_depth = 3;
     m_collision.height = 0;
     m_collision.width = 0;
     m_collision.x = location.x;
     m_collision.y = location.y;
     m_velocity = velocity;
     time = 0;
-    frames[0] = load_texture_by_name("explosion/explosion1.png");
-    frames[1] = load_texture_by_name("explosion/explosion2.png");
-    frames[2] = load_texture_by_name("explosion/explosion3.png");
-    frames[3] = load_texture_by_name("explosion/explosion4.png");
-    frames[4] = load_texture_by_name("explosion/explosion5.png");
-    frames[5] = load_texture_by_name("explosion/explosion6.png");
-    frames[6] = load_texture_by_name("explosion/explosion7.png");
-    frames[7] = load_texture_by_name("explosion/explosion8.png");
-    frames[8] = load_texture_by_name("explosion/explosion9.png");
-    frames[9] = load_texture_by_name("explosion/explosion10.png");
-    frames[10] = load_texture_by_name("explosion/explosion11.png");
-    frames[11] = load_texture_by_name("explosion/explosion12.png");
-    frames[12] = load_texture_by_name("explosion/explosion13.png");
+    frames[0] = load_texture_by_name("ship_explosion/ship_explosion1.png");
+    frames[1] = load_texture_by_name("ship_explosion/ship_explosion2.png");
+    frames[2] = load_texture_by_name("ship_explosion/ship_explosion3.png");
+    frames[3] = load_texture_by_name("ship_explosion/ship_explosion4.png");
+    frames[4] = load_texture_by_name("ship_explosion/ship_explosion5.png");
+    frames[5] = load_texture_by_name("ship_explosion/ship_explosion6.png");
+    frames[6] = load_texture_by_name("ship_explosion/ship_explosion7.png");
+    frames[7] = load_texture_by_name("ship_explosion/ship_explosion8.png");
+    frames[8] = load_texture_by_name("ship_explosion/ship_explosion9.png");
+    frames[9] = load_texture_by_name("ship_explosion/ship_explosion10.png");
+    frames[10] = load_texture_by_name("ship_explosion/ship_explosion11.png");
+    frames[11] = load_texture_by_name("ship_explosion/ship_explosion12.png");
+    frames[12] = load_texture_by_name("ship_explosion/ship_explosion13.png");
+    frames[13] = load_texture_by_name("ship_explosion/ship_explosion14.png"); 
 }
 void ShipExplosion::on_tick(){
     time += GetFrameTime();
@@ -87,11 +92,11 @@ void ShipExplosion::on_tick(){
     set_location(get_location()+m_velocity*GetFrameTime());
 }
 void ShipExplosion::on_render(){
-    int idx = round((time)*6.5);
+    int idx = round((time)*14*2);
     if(idx<0) idx = 0;
-    if(idx>12) idx = 12;
+    if(idx>13) idx = 13;
     Texture * texture = get_texture(frames[idx]);
-    DrawTextureV(*texture, convert_world_to_screen(Vector2{m_collision.x-25, m_collision.y-25}), WHITE);
+    DrawTextureV(*texture, convert_world_to_screen(Vector2{m_collision.x-50, m_collision.y-50}), {255, 255, 255, 128});
 }
 size_t ShipExplosion::get_id(){
     return (size_t)(ent_id::particle); 

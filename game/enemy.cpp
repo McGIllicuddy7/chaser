@@ -129,7 +129,7 @@ void Enemy::handle_firing(){
     m_this_ref = this_ref;
     m_collision.height = 32;
     m_collision.width = 48;
-    m_health = 2;
+    m_health = 1;
     shot_timer = 0;
     m_texture = load_texture_by_name("enemy_ship_engines.png");
  }
