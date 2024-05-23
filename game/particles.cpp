@@ -29,7 +29,7 @@ size_t LaserBeam::get_id(){
     return (size_t)(ent_id::particle); 
 }
 Chaff::Chaff(Vector2 location, Vector2 velocity){
-    m_collision = {0,0, 40, 40};
+    m_collision = {0,0, 100, 100};
     set_location(location);
     remaining_life = 10;
     m_velocity = velocity;
@@ -51,8 +51,8 @@ void Chaff::on_render(){
     //DrawRectangleV(convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), {m_collision.width, m_collision.height}, {255, 255, 255,(unsigned char)Lerp(0,255, (remaining_life/10)*(remaining_life/10))});
     ResourceRef r = load_texture_by_name("fog.png");
     Texture * tex = get_texture(r);
-    float scale = m_collision.width/40;
-    DrawTextureEx(*tex,convert_world_to_screen(Vector2{m_collision.x-20*scale, m_collision.y-20*scale}),0,scale, {255, 255, 255,(unsigned char)Lerp(0,255, (remaining_life/10)*(remaining_life/10))});
+    float scale = m_collision.width/100;
+    DrawTextureEx(*tex,convert_world_to_screen(Vector2{m_collision.x, m_collision.y}),0,scale, {255, 255, 255,(unsigned char)Lerp(0,255, (remaining_life/10)*(remaining_life/10))});
 
 }
 void Chaff::on_damage(float damage, ResourceRef damager){

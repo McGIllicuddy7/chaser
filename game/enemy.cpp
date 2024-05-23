@@ -98,8 +98,8 @@ void Enemy::handle_firing(){
                 reflex -=GetFrameTime();
                 if(reflex<0){
                     shot_timer = shot_min;
-                    fire_laser(get_location()+Vector2{-32,-5}, Vector2{-1,0}, m_this_ref);
-                    fire_laser(get_location()+Vector2{-32,5}, Vector2{-1,0}, m_this_ref);
+                    fire_blaster(get_location()+Vector2{-32,-5}, Vector2{-1,0}, m_this_ref);
+                    fire_blaster(get_location()+Vector2{-32,5}, Vector2{-1,0}, m_this_ref);
                 }
             }
         }
@@ -113,8 +113,8 @@ void Enemy::handle_firing(){
         reflex -= GetFrameTime();
         if(reflex<=0){
             shot_timer = shot_min;
-            fire_laser(get_location()+Vector2{-32,-5}, Vector2{-1,0}, m_this_ref);
-            fire_laser(get_location()+Vector2{-32,5}, Vector2{-1,0}, m_this_ref);
+            fire_blaster(get_location()+Vector2{-32,-5}, Vector2{-1,0}, m_this_ref);
+            fire_blaster(get_location()+Vector2{-32,5}, Vector2{-1,0}, m_this_ref);
         }
     }
 }
@@ -129,7 +129,7 @@ void Enemy::handle_firing(){
     m_this_ref = this_ref;
     m_collision.height = 32;
     m_collision.width = 48;
-    m_health = 1;
+    m_health = 2;
     shot_timer = 0;
     m_texture = load_texture_by_name("enemy_ship_engines.png");
  }

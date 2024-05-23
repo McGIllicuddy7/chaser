@@ -89,8 +89,8 @@ Player::Player(ResourceRef manager){
     m_velocity = (new_loc-old_loc)/GetFrameTime();
     const int sz = 100;
     if(IsKeyPressed(KEY_J) && power>5){
-        fire_laser(get_location()+Vector2{5,-7}, Vector2{1,0}, m_this_ref);
-        fire_laser(get_location()+Vector2{5,7}, Vector2{1,0}, m_this_ref);
+        fire_blaster(get_location()+Vector2{5,-7}, Vector2{1,0}, m_this_ref);
+        fire_blaster(get_location()+Vector2{5,7}, Vector2{1,0}, m_this_ref);
         power -= 5;
     }
     if(IsKeyPressed(KEY_K)&& railgun_ammo>0 && power>25){

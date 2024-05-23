@@ -117,15 +117,15 @@ void Manager::on_render(){
             snprintf(buff, 99, "high score %zu00", m_high_score);
             DrawText(buff, 1000, 125, 24, WHITE);
         } else{
-            DrawText("Game Over",500,100, 64, WHITE); 
+            DrawText("Game Over",400,100, 64, WHITE); 
             DrawText("Press Enter to Restart", 520, 200, 32,WHITE);
             char buff[100] = {};
             snprintf(buff, 99, "your score %zu00", m_score);
-            DrawText(buff,550, 300, 25, WHITE);
+            DrawText(buff,450, 300, 25, WHITE);
             snprintf(buff, 99, "high score %zu00", m_high_score);
-            DrawText(buff, 550, 350, 25, WHITE);
+            DrawText(buff, 450, 350, 25, WHITE);
             if(m_new_high_score){
-                DrawText("NEW HIGH SCORE!", 450, 450,50, WHITE);
+                DrawText("NEW HIGH SCORE!", 500, 450,50, WHITE);
             }
         }
     }
