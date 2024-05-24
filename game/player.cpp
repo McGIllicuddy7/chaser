@@ -14,20 +14,20 @@ Player::Player(ResourceRef manager){
             if(power>100){
               power = 100;
             }
-            if((int)ammo_timer%7 == 0){
-              railgun_ammo += 1;
-              if(railgun_ammo>5){
-                railgun_ammo = 5;
-              }
-            }
         }
         if(ammo_timer>21){
           ammo_timer = 0;
-          chaff_ammo = 10;
           missile_ammo = 1;
           m_health += 1;
           if(m_health>4){
             m_health = 4;
+          }
+        }
+      }
+      if(m_health<4){
+        if(rand()%10>m_health){
+          if(rand()%100<4){ 
+            spawn_chaff(this->get_location(),Vector2{200,-200}, m_this_ref);
           }
         }
       }
@@ -93,16 +93,11 @@ Player::Player(ResourceRef manager){
         fire_blaster(get_location()+Vector2{5,7}, Vector2{1,0}, m_this_ref);
         power -= 5;
     }
-    if(IsKeyPressed(KEY_K)&& railgun_ammo>0 && power>25){
-        fire_railgun(get_location()+Vector2{5,-0}, Vector2{1,0}, m_this_ref);
-        railgun_ammo -= 1;
-        power -=25;
+    if(IsKeyPressed(KEY_K)&& power>50){
+        fire_laser(get_location()+Vector2{5,-0}, Vector2{1,0}, m_this_ref);
+        power -=50;
     }
-    if(IsKeyPressed(KEY_L) && chaff_ammo>0){
-        spawn_chaff(get_location()+Vector2{64,0},get_velocity()+Vector2{100,0}, m_this_ref);
-        chaff_ammo--;
-    }
-    if(IsKeyPressed(KEY_M) && missile_ammo>0){
+    if(IsKeyPressed(KEY_L) && missile_ammo>0){
         fire_missile(get_location()+Vector2{64,0},get_velocity()+Vector2{100,(float)((rand()%2)*2-1)*300}, m_this_ref,(size_t)(ent_id::enemy));
         missile_ammo -= 1;
     }
@@ -115,9 +110,7 @@ Player::Player(ResourceRef manager){
     m_health = 4;
     disp_y = 0;
     missile_ammo = 1;
-    railgun_ammo = 5;
     power = 100;
-    chaff_ammo = 10;
     m_texture = load_texture_by_name("friendly_ship_engines.png");
     set_entity_as_origin(this_ref,{200,0});
  }
@@ -131,12 +124,8 @@ void Player::on_render(){
   DrawText(buff, 20, 40, 20, WHITE);
   snprintf(buff, 99, "power %d%%", power);
   DrawText(buff, 20, 80, 20, WHITE);
-  snprintf(buff, 99, "railgun shots: %d", railgun_ammo);
-  DrawText(buff, 20,120, 20, WHITE);
   snprintf(buff, 99, "missiles: %d", missile_ammo);
-  DrawText(buff, 20,160, 20, WHITE);
-  snprintf(buff, 99, "chaff shells: %d", chaff_ammo);
-  DrawText(buff, 20, 200, 20, WHITE);
+  DrawText(buff, 20,120, 20, WHITE);
 }
 
 void Player::on_destroy(){

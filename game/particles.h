@@ -11,7 +11,9 @@ class LaserBeam:public Entity{
     void on_tick();
     void on_render();
     size_t get_id();
+    void free_memory();
 };
+ResourceRef new_laser(Vector2 start, Vector2 end, ResourceRef Parent);
 class Chaff:public Entity{
     float remaining_life;
     float temperature;
@@ -21,7 +23,9 @@ public:
     void on_render();
     void on_damage(float damage, ResourceRef damager);
     size_t get_id();
+    void free_memory();
 };
+ResourceRef new_chaff(Vector2 start, Vector2 velocity);
 class ShipExplosion:public Entity{
     float time;
     ResourceRef frames[14];
@@ -30,4 +34,6 @@ class ShipExplosion:public Entity{
     void on_tick();
     void on_render();
     size_t get_id(); 
+    void free_memory();
 };
+ResourceRef new_ship_explosion(Vector2 location, Vector2 velocity);

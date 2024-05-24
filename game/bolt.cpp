@@ -1,5 +1,6 @@
 #include "bolt.h" 
 #include "entids.h"
+static Pool<Bolt, 1000> bolts;
 void Bolt::on_tick(){
     float dt = GetFrameTime();
     float dist = Vector2Length(m_velocity);
@@ -62,4 +63,11 @@ Bolt::Bolt(Vector2 location, Vector2 velocity, ResourceRef firer){
     m_firer = firer;
     m_lf = 1;
     m_depth = 3;
+}
+void Bolt::free_memory(){
+    bolts.mfree(this);
+}
+ResourceRef new_bolt(Vector2 location, Vector2 velocity, ResourceRef firer){
+    Bolt * b = POOL_ALLOC(Bolt, bolts, location, velocity, firer);
+    return register_entity(b);
 }

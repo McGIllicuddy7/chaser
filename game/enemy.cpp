@@ -4,6 +4,7 @@
  #include "player.h"
  #include "entids.h"
  #include "particles.h"
+Pool<Enemy, 100> enemies; 
 Enemy::Enemy(ResourceRef manager, Vector2 location){
     m_manager = manager;
     m_collision.x = location.x;
@@ -124,6 +125,13 @@ void Enemy::handle_firing(){
     }
     handle_movement();
     handle_firing();
+    if(m_health<2){
+        if(rand()%10>m_health){
+          if(rand()%100<4){ 
+            spawn_chaff(this->get_location(),(Vector2){200,-200}, m_this_ref);
+          }
+        }
+      }
  }
  void Enemy::on_init(ResourceRef this_ref){
     m_this_ref = this_ref;
@@ -153,9 +161,15 @@ void Enemy::on_destroy(){
     if(s){
         PlaySound(*s);
     }
-    ShipExplosion * ex = new ShipExplosion(get_location(), m_velocity);
-    register_entity(ex);
+    new_ship_explosion(get_location(), m_velocity);
 }
 size_t Enemy::get_id(){
     return (size_t)(ent_id::enemy);
+}
+void Enemy::free_memory(){
+    enemies.mfree(this);
+}
+ResourceRef new_enemy(ResourceRef manager, Vector2 location){
+    Enemy * e = POOL_ALLOC(Enemy, enemies, manager, location);
+    return register_entity(e);
 }

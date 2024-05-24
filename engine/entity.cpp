@@ -44,3 +44,9 @@ size_t Entity::get_id(){
 Entity::~Entity(){
 
 }
+void Entity::free_memory(){
+   delete this;
+}
+void delete_entity(Entity * entity){
+   entity->free_memory();
+}

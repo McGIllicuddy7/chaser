@@ -9,7 +9,9 @@ public:
     void on_tick();
     void on_render();
     size_t get_id(); 
+    void free_memory();
 };
+ResourceRef new_building(Vector2 location, float height);
 class Star:public Entity{
     float m_radius;
 public:
@@ -17,4 +19,6 @@ public:
     void on_tick();
     void on_render();
     size_t get_id(); 
+    void free_memory();
 };
+ResourceRef new_star(Vector2 location, float radius);

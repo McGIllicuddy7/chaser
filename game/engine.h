@@ -3,6 +3,7 @@
 #include "../engine/ops.h"
 #include "../engine/entity.h"
 #include "../engine/resource.h"
+#include "../engine/pool.h"
 Vector2 convert_world_to_screen(Vector2 v);
 ResourceRef register_entity(Entity *e);
 void set_entity_as_origin(ResourceRef ref, Vector2 Offset);

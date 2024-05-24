@@ -22,8 +22,7 @@ void Manager::on_tick(){
                 Player * bert = new Player(m_this_ref);
                 player = register_entity(bert);
                 for(int i =0; i<desired_ship_count; i++){
-                    Enemy * e = new Enemy(m_this_ref, Vector2{(float)(500+rand()%280),(float)(rand()%screen_height()-screen_height()/2)});
-                    ResourceRef r = register_entity(e);
+                    ResourceRef r = new_enemy(m_this_ref, Vector2{(float)(500+rand()%280),(float)(rand()%screen_height()-screen_height()/2)});
                     ships.push_back(r);
                     ship_count++;
                 }
@@ -37,20 +36,17 @@ void Manager::on_tick(){
     } else{
         if(ship_count<desired_ship_count){
             if(rand()%64 == 0){
-                Enemy * e = new Enemy(m_this_ref, Vector2{(float)(500+rand()%280),(float)(rand()%screen_height()-screen_height()/2)});
-                ResourceRef r = register_entity(e);
+                ResourceRef r =  new_enemy(m_this_ref, Vector2{(float)(500+rand()%280),(float)(rand()%screen_height()-screen_height()/2)});
                 ships.push_back(r);
                 ship_count++;
             }
         }
         if(rand()%120 == 0){
             Player * p = (Player *)get_entity(player);
-            Building * e = new Building({-1000,-p->y_disp()}, (rand()%1600)-800);
-            register_entity(e);
+            new_building({-1000,-p->y_disp()}, (rand()%1600)-800);
         }
         if(rand()%2 == 0){
-            Star * s = new Star((Vector2){-1000, (float)(rand()%2000-1000)}, rand()%2+rand()%2);
-            register_entity(s);
+            new_star((Vector2){-1000, (float)(rand()%2000-1000)}, rand()%2+rand()%2);
         }
     }
 

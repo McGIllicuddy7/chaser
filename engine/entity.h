@@ -36,4 +36,5 @@ public:
     virtual void on_damage(float damage,ResourceRef other);
     virtual size_t get_id();
     virtual ~Entity();
+    virtual void free_memory();
 };

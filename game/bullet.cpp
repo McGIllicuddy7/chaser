@@ -1,5 +1,6 @@
 #include "bullet.h" 
 #include "entids.h"
+Pool<Bullet, 1000> bullets;
 void Bullet::on_tick(){
     float dt = GetFrameTime();
     float dist = Vector2Length(m_velocity);
@@ -60,4 +61,11 @@ Bullet::Bullet(Vector2 location, Vector2 velocity, ResourceRef firer){
     m_firer = firer;
     m_lf =4;
     m_depth = 3;
+}
+void Bullet::free_memory(){
+    bullets.mfree(this);
+}
+ResourceRef new_bullet(Vector2 location, Vector2 velocity, ResourceRef firer){
+    Bullet* b = POOL_ALLOC(Bullet, bullets, location, velocity, firer);
+    return register_entity(b);
 }

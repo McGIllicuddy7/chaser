@@ -4,6 +4,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <stdio.h>
+template <typename T> void delete_func(T * v){
+    delete v;
+}
 struct ResourceRef{
     size_t idx;
     size_t generation;
@@ -11,13 +15,13 @@ struct ResourceRef{
         return (idx == other.idx)&&(generation == other.generation);
     }
 };
-template <typename T >struct Resource{
+template <typename T, void (*deleter)(T *)>struct Resource{
     T* m_value;
     size_t m_generation;
     void reset(){
         if(m_value){
             cleanup(m_value);
-            delete m_value;
+            deleter(m_value);
         }
         m_value = 0;
     }
@@ -46,8 +50,8 @@ template <typename T >struct Resource{
         return m_generation;
     }
 };
-template <typename T> struct ResourceCache{
-    std::vector<Resource<T>> cache; 
+template <typename T, void(*deleter)(T*) = delete_func> struct ResourceCache{
+    std::vector<Resource<T, deleter>> cache; 
     size_t cache_size(){
         return cache.size();
     }
@@ -61,7 +65,7 @@ template <typename T> struct ResourceCache{
         }
         if( idx == -1){
             idx = cache_size();
-            cache.push_back(Resource<T>());
+            cache.push_back(Resource<T, deleter>());
         }
         cache[idx].emplace(value);
         return ResourceRef{(size_t)idx, cache[idx].generation()};

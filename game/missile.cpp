@@ -1,4 +1,5 @@
 #include "missile.h"
+Pool<Missile,1000> missiles;
 void Missile::on_tick(){
     float dt = GetFrameTime();
     if(!m_found_target){
@@ -97,4 +98,11 @@ Missile::Missile(Vector2 location, Vector2 velocity, ResourceRef firer, size_t t
     m_look_timer = 0.5;
     m_target_id = target_id;
     m_found_target = false;
+}
+void Missile::free_memory(){
+    missiles.mfree(this);
+}
+ResourceRef new_missile(Vector2 location, Vector2 velocity, ResourceRef firer, size_t target_id){
+    Missile* b = POOL_ALLOC(Missile, missiles, location, velocity, firer, target_id);
+   return register_entity(b);
 }

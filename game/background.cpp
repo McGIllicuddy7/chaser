@@ -1,5 +1,7 @@
 #include "background.h"
 #include "entids.h"
+Pool<Building, 100> buildings;
+Pool<Star, 1000> stars;
 Building::Building(Vector2 location, float height){
     m_collision.x = location.x;
     m_collision.y = location.y;
@@ -33,6 +35,13 @@ void Building::on_render(){
 size_t Building::get_id(){
     return (size_t)ent_id::background;
 }
+void Building::free_memory(){
+    buildings.mfree(this);
+}
+ResourceRef new_building(Vector2 location, float height){
+    Building * b = POOL_ALLOC(Building, buildings, location, height);
+    return register_entity(b);
+}
 Star::Star(Vector2 location, float radius){
     m_collision.x = location.x;
     m_collision.y = location.y;
@@ -53,4 +62,11 @@ void Star::on_render(){
 }
 size_t Star::get_id(){
     return (size_t)ent_id::background;
+}
+void Star::free_memory(){
+    stars.mfree(this);
+}
+ResourceRef new_star(Vector2 location, float radius){
+    Star * b = POOL_ALLOC(Star,stars, location, radius);
+    return register_entity(b);
 }

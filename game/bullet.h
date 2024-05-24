@@ -11,4 +11,6 @@ class Bullet:public Entity{
     void on_init(ResourceRef this_ref);
     void on_render();
     void on_destroy();
+    void free_memory();
 };
+ResourceRef new_bullet(Vector2 location, Vector2 velocity, ResourceRef firer);

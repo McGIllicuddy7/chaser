@@ -10,3 +10,4 @@ raylib-master/raylib/*/*
 *.prof
 high_score
 chaser
+*.dSYM/

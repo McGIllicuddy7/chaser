@@ -19,4 +19,6 @@ class Enemy:public Entity{
     void on_destroy();
     void on_damage(float damage, ResourceRef Other);
     size_t get_id();
+    void free_memory();
 };
+ResourceRef new_enemy(ResourceRef manager, Vector2 location);

@@ -16,8 +16,7 @@ Collision fire_laser(Vector2 start, Vector2 direction, ResourceRef ref){
     else{
         col.location = hit_loc;
     }
-    LaserBeam * e = new LaserBeam(start, hit_loc, ref);
-    register_entity(e);
+    new_laser(start, hit_loc, ref);
     ResourceRef r= load_sound_by_name("laserShoot.wav");
     Sound * s = get_sound(r);
     if(s){
@@ -33,8 +32,7 @@ void fire_railgun(Vector2 start, Vector2 direction, ResourceRef ref){
     else{
         dir = {0,0};
     }
-    Bullet * b =new Bullet(start, dir*6000, ref);
-    register_entity(b);
+    new_bullet(start, dir*6000, ref);
     ResourceRef r= load_sound_by_name("railgun.wav");
     Sound * s = get_sound(r);
     if(s){
@@ -42,12 +40,10 @@ void fire_railgun(Vector2 start, Vector2 direction, ResourceRef ref){
     }
 }
 void spawn_chaff(Vector2 location, Vector2 velocity,ResourceRef ref){
-    Chaff * c = new Chaff(location, velocity);
-    register_entity(c);
+    new_chaff(location, velocity);
 }
 void fire_missile(Vector2 location, Vector2 velocity, ResourceRef ref, size_t target_id){
-    Missile * m = new Missile(location, velocity, ref, target_id);
-    register_entity(m);
+    new_missile(location, velocity, ref, target_id);
     ResourceRef r= load_sound_by_name("missile.wav");
     Sound * s = get_sound(r);
     if(s){
@@ -67,8 +63,7 @@ void fire_blaster(Vector2 start, Vector2 direction, ResourceRef ref){
     if(e){
         vel = e->get_velocity();
     }
-    Bolt * b =new Bolt(start, dir*850+vel, ref);
-    register_entity(b);
+    new_bolt(start, dir*850+vel, ref);
     ResourceRef r= load_sound_by_name("laserShoot.wav");
     Sound * s = get_sound(r);
     if(s){

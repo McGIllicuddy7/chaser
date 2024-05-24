@@ -9,6 +9,7 @@
 class Entity;
 struct EntityBB;
 struct Collision;
+void delete_entity(Entity * entity);
 void cleanup(Entity * entity);
 void cleanup(Texture * texture);
 void cleanup(Sound * sound);
@@ -31,7 +32,7 @@ class Runtime {
     size_t m_screen_width;
     bool m_reset;
     std::string m_name;
-    ResourceCache<Entity> m_entities;
+    ResourceCache<Entity, delete_entity> m_entities;
     ResourceRef m_origin_entity;
     bool m_use_entity_as_origin;
     Vector2 m_camera_location;

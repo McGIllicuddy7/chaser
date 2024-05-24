@@ -29,10 +29,13 @@ size_t LaserBeam::get_id(){
     return (size_t)(ent_id::particle); 
 }
 Chaff::Chaff(Vector2 location, Vector2 velocity){
-    m_collision = {0,0, 100, 100};
+    m_collision = {0,0,80, 0};
     set_location(location);
+    m_collision.y -= 20;
     remaining_life = 10;
     m_velocity = velocity;
+    m_velocity.x +=(rand()%100)-50;
+    m_velocity.y +=(rand()%20);
     m_depth = 4;
 }
 void Chaff::on_tick(){
@@ -42,10 +45,17 @@ void Chaff::on_tick(){
         destroy_entity(m_this_ref);
     }
     set_location( get_location()+ m_velocity*dt);
-    m_collision.x -= 5*dt;
-    m_collision.y -= 5*dt;
-    m_collision.height += 10*dt;
-    m_collision.width += 10*dt;
+    m_collision.x -= 8*dt;
+    m_collision.y -= 8*dt;
+    m_collision.width += 16*dt;
+    float vel_scale = Vector2Length(m_velocity);
+    if(vel_scale>0.1){
+        Vector2 vel_norm = Vector2Normalize(m_velocity);
+        m_velocity =m_velocity- vel_scale*0.01*dt*vel_norm;
+    } else{
+        m_velocity = {0};
+    }
+    m_velocity.y += 10*dt;
 }
 void Chaff::on_render(){
     //DrawRectangleV(convert_world_to_screen(Vector2{m_collision.x, m_collision.y}), {m_collision.width, m_collision.height}, {255, 255, 255,(unsigned char)Lerp(0,255, (remaining_life/10)*(remaining_life/10))});
@@ -100,4 +110,28 @@ void ShipExplosion::on_render(){
 }
 size_t ShipExplosion::get_id(){
     return (size_t)(ent_id::particle); 
+}
+static Pool<LaserBeam,100> lasers;
+static Pool<Chaff, 100> chaffs;
+static Pool<ShipExplosion, 100>  ship_explosions;
+void LaserBeam::free_memory(){
+    lasers.mfree(this);
+}
+void Chaff::free_memory(){
+    chaffs.mfree(this);
+}
+void ShipExplosion::free_memory(){
+    ship_explosions.mfree(this);
+}
+ResourceRef new_laser(Vector2 start, Vector2 end, ResourceRef Parent){
+    LaserBeam * b = POOL_ALLOC(LaserBeam, lasers, start, end, Parent);
+    return register_entity(b);
+}
+ResourceRef new_chaff(Vector2 start, Vector2 velocity){
+    Chaff * b = POOL_ALLOC(Chaff, chaffs, start, velocity);
+    return register_entity(b);
+}
+ResourceRef new_ship_explosion(Vector2 location, Vector2 velocity){
+    ShipExplosion * b = POOL_ALLOC(ShipExplosion, ship_explosions, location, velocity);
+    return register_entity(b);
 }
