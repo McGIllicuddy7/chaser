@@ -9,7 +9,7 @@ Manager::Manager(void *runtime){
     started = false;
     end_screen = false;
     ship_count = 0;
-    desired_ship_count = 2;
+    desired_ship_count = 1;
     m_collision.width = 0;
     m_new_high_score = false;
 }
@@ -43,7 +43,7 @@ void Manager::on_tick(){
                 ship_count++;
             }
         }
-        if(rand()%60 == 0){
+        if(rand()%120 == 0){
             Player * p = (Player *)get_entity(player);
             Building * e = new Building({-1000,-p->y_disp()}, (rand()%1600)-800);
             register_entity(e);
@@ -106,7 +106,9 @@ void Manager::ship_destroyed(ResourceRef ship_ref){
         return;
     }
     ships.erase(ships.begin()+idx, ships.begin()+idx);
-    m_score ++;
+    if(started){
+        m_score ++;
+    }
 }
 void Manager::on_render(){
     if(!started){

@@ -71,7 +71,7 @@ Player::Player(ResourceRef manager){
       if(m_momentum.x<-x_speed){
         m_momentum.x = -x_speed;
       }
-      float dist = 150;
+      float dist = 400;
     Collision c = box_trace(this->get_location(),this->get_location()+m_momentum*dist*dt, m_collision, m_this_ref);
     if(c.hit){ 
         Entity * e = get_entity(c.collided_with);

@@ -72,7 +72,7 @@ void Runtime::Render(){
 void Runtime::Run(){
     SetTraceLogLevel(LOG_ERROR);
     InitWindow(m_screen_width, m_screen_height, m_name.c_str());
-    SetTargetFPS(60);
+    SetTargetFPS(120);
     InitAudioDevice();
     m_background_color = BLACK;
     restart:

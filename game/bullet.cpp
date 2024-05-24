@@ -58,6 +58,6 @@ Bullet::Bullet(Vector2 location, Vector2 velocity, ResourceRef firer){
     m_collision.width = 4;
     m_velocity = velocity;
     m_firer = firer;
-    m_lf =1;
+    m_lf =4;
     m_depth = 3;
 }
